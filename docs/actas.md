@@ -1,33 +1,31 @@
-# Actas del equipo [nombre del equipo]
+# Actas del equipo Estrella
 
 ## Acta 1 — Semana 1 — 17 de agosto de 2026
 
 **Asistentes:**
 
-* [Nombre del integrante 1]
-* [Nombre del integrante 2]
-* [Nombre del integrante 3]
-* Kevin Marca Huaman
+* Kevin Jefherson Marca Huaman
+* [Integrante 2]
+* [Integrante 3]
+* [Integrante 4]
 
 **Acuerdos:**
 
-1. Idea elegida: **[Nombre de la aplicación]**, porque permite resolver [razón breve].
-2. Ideas descartadas:
-
-   * [Idea 1]: por ser muy compleja.
-   * [Idea 2]: porque requería más tiempo.
+1. Idea elegida: **App Leche**, porque [razón breve].
+2. Ideas descartadas: [completar por el equipo].
 3. Roles de la semana:
 
-   * [Nombre]: Coordinación.
-   * [Nombre]: Lógica y datos.
-   * [Nombre]: UI.
-   * Kevin Marca Huaman: QA y documentación.
-4. Horario fijo de reunión semanal: **[día] a las [hora]**.
+   * Kevin Jefherson Marca Huaman — Coordinación.
+   * [Integrante 2] — Lógica y datos.
+   * [Integrante 3] — UI.
+   * [Integrante 4] — QA y documentación.
+4. Horario fijo de reunión semanal: **miércoles a las 10:00 a. m.**
 
 **Compromisos individuales de la semana:**
 
-* [Nombre]: Crear la estructura inicial del proyecto.
-* [Nombre]: Investigar la lógica y los datos.
-* [Nombre]: Diseñar la interfaz inicial.
-* Kevin Marca Huaman: Crear el repositorio de GitHub, configurar las ramas y elaborar la documentación.
+* Kevin Jefherson Marca Huaman: Configurar el repositorio, coordinar al equipo y revisar la documentación.
+* [Integrante 2]: [Completar compromiso].
+* [Integrante 3]: [Completar compromiso].
+* [Integrante 4]: [Completar compromiso].
+e GitHub, configurar las ramas y elaborar la documentación.
 
