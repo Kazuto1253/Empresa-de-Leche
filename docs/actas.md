@@ -2,7 +2,7 @@
 
 ## Acta 1 — Semana 1 — 17 de agosto de 2026
 
-**Asistentes:**
+**Asistentes :**
 
 * Kevin Jefherson Marca Huaman
 * [Integrante 2]
