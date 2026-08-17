@@ -1,4 +1,4 @@
-# Empresa-de-Leche
+# App Leche
 Aplicacion Movil de Recursos de Leche
 
 ## Problema que resuelve
@@ -32,14 +32,14 @@ Atributos tentativos:
 
 [Por ejemplo: cámara, lector QR, compartir, notificaciones o ubicación.]
 
-## Equipo [nombre del equipo]
+## Equipo Estrella
 
-| Integrante         | Código      | Rol semana 1       |
-| ------------------ | ----------- | ------------------ |
-| [Nombre 1]         | [código]    | Coordinación       |
-| [Nombre 2]         | [código]    | Lógica y datos     |
-| [Nombre 3]         | [código]    | UI                 |
-| Kevin Marca Huaman | [tu código] | QA y documentación |
+| Integrante | Código | Rol semana 1 |
+|---|---|---|
+| Kevin Jefherson Marca Huaman | 202410821 | Coordinación |
+| [Integrante 2] | [código] | Lógica y datos |
+| [Integrante 3] | [código] | UI |
+| [Integrante 4] | [código] | QA y documentación |
 
 ## Tecnologías
 
