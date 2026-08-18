@@ -39,7 +39,7 @@ Atributos tentativos:
 | Kevin Jefherson Marca Huaman | 202410821 | Coordinación |
 | [Integrante 2] | [código] | Lógica y datos |
 | [Integrante 3] | [código] | UI |
-| [Integrante 4] | [código] | QA y documentación |
+| Yenifher Sharai Sanchez Chipa | 202411762 | QA y documentación |
 
 ## Tecnologías
 
