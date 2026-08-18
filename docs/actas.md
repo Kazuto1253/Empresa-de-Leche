@@ -5,7 +5,7 @@
 **Asistentes :**
 
 * Kevin Jefherson Marca Huaman
-* [Integrante 2]
+* Yenifher Sharai Sanchez Chipa
 * [Integrante 3]
 * [Integrante 4]
 
@@ -17,8 +17,8 @@
 
    * Kevin Jefherson Marca Huaman — Coordinación.
    * [Integrante 2] — Lógica y datos.
-   * [Integrante 3] — UI.
-   * [Integrante 4] — QA y documentación.
+   * [Integrante 3] — UI.i/8
+   * Yenifher Sharai Sanchez Chipa — QA y documentación.
 4. Horario fijo de reunión semanal: **miércoles a las 10:00 a. m.**
 
 **Compromisos individuales de la semana:**
@@ -26,6 +26,6 @@
 * Kevin Jefherson Marca Huaman: Configurar el repositorio, coordinar al equipo y revisar la documentación.
 * [Integrante 2]: [Completar compromiso].
 * [Integrante 3]: [Completar compromiso].
-* [Integrante 4]: [Completar compromiso].
+* Yenifher Sharai Sanchez Chipa: Probar el sistema, detectar errores y verificar sus correcciones.
 e GitHub, configurar las ramas y elaborar la documentación.
 
