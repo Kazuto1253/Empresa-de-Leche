@@ -31,6 +31,6 @@ No modificar migraciones ya aplicadas en entornos compartidos.
 
 Mantén la lógica de negocio en `core` o `app:shared` siempre que sea razonable.
 
-## Material de Entrada
+## Material de entrada
 
-`D:\Ecolactea\_work_input` es referencia externa, no producto. No copiar ZIPs ni carpetas completas dentro del repositorio. El Excel validado sí se conserva en `docs/project-management`.
+Los archivos de trabajo locales y las descargas temporales no forman parte del producto. No copiar ZIPs ni carpetas completas dentro del repositorio. Las fuentes maestras validadas por el equipo se conservan en `docs/project-management`.

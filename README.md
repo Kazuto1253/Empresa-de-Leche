@@ -1,108 +1,143 @@
 # Ecoláctea Digital
 
-Ecoláctea Digital es una aplicación multiplataforma para apoyar la gestión láctea municipal de Huata. Esta base técnica prepara un único cliente Kotlin Multiplatform para Android, iOS y Desktop, más un backend independiente en Ktor con API REST y MySQL.
+> Plataforma multiplataforma para mejorar la trazabilidad del acopio, control de calidad, liquidaciones, producción y ventas de la planta municipal de leche de Huata.
 
-## Stack
+## Estado del proyecto
+
+Ecoláctea Digital se encuentra en fase de construcción académica. La base técnica Kotlin Multiplatform está preparada y validada; los requerimientos V2 fueron aprobados por el equipo y permanecen pendientes de validación formal con la planta y el docente.
+
+La línea base documental propuesta es `v0.1.0`. Ningún requerimiento funcional se declara terminado en esta etapa.
+
+## Problema que resuelve
+
+El acopio de leche depende parcialmente de planillas y registros distribuidos que dificultan consolidar oportunamente cantidades, calidad, diferencias entre campo y planta, liquidaciones y pagos. La conectividad variable en las rutas también impide depender de una conexión permanente.
+
+La solución busca conservar una trazabilidad verificable desde el registro del proveedor y el acopio hasta la recepción, calidad, pago, producción, venta y reporte, incluyendo operación offline para el trabajo de campo.
+
+## Público objetivo
+
+- Personal administrativo y operativo de la planta municipal de Huata.
+- Acopiadores que trabajan en rutas con conectividad inestable.
+- Proveedores de leche que consultan exclusivamente su información.
+- Responsables de supervisión y toma de decisiones.
+
+## Alcance funcional
+
+La fuente maestra V2 contiene 36 requerimientos funcionales y 12 no funcionales. Sus áreas principales son:
+
+- Proveedores, zonas, rutas y jornadas de acopio.
+- Acopio en campo y entregas directas.
+- Operación offline, sincronización idempotente y gestión de conflictos.
+- Recepción y conciliación entre campo y planta.
+- Control de calidad, incidencias y seguimiento.
+- Liquidaciones, pagos y comunicaciones al proveedor.
+- Eventos, capacitaciones y asistencia.
+- Producción, rendimiento, ventas y reportes.
+- Autenticación, autorización, auditoría y configuración.
+
+Los valores, fórmulas, rangos y procedimientos que no fueron confirmados se conservan como incertidumbres; no deben convertirse en reglas definitivas hasta su validación.
+
+## Roles del sistema
+
+La aplicación reconoce exactamente cuatro roles:
+
+- `ADMINISTRADOR_GENERAL`
+- `PERSONAL_PLANTA`
+- `ACOPIADOR`
+- `PROVEEDOR`
+
+El rol es determinado por el backend. El usuario no selecciona su rol al iniciar sesión.
+
+## Plataformas y tecnología
 
 - Kotlin Multiplatform y Compose Multiplatform.
-- Android, iOS y Desktop JVM.
-- Backend Kotlin con Ktor.
-- MySQL como base de datos central.
-- Flyway para migraciones.
-- HikariCP para pool JDBC.
-- kotlinx.serialization, coroutines y Ktor Client para comunicación compartida.
+- Android como objetivo móvil principal del curso.
+- Desktop JVM para Windows, macOS y Linux.
+- iOS preparado mediante el proyecto Xcode de `app/iosApp`; requiere macOS para compilarse.
+- Backend Kotlin con Ktor y API REST JSON.
+- MySQL, HikariCP y migraciones Flyway.
+- Clean Architecture y operación offline-first.
 
-No hay target Web, Dockerfile ni Docker Compose en esta base. El plugin Ktor expone tareas opcionales Docker/Jib, pero no son necesarias para compilar, testear ni ejecutar el servidor local.
+No se contempla una aplicación web, Docker ni Docker Compose en esta línea base.
 
-## Módulos y Componentes
+## Estructura del repositorio
 
-- `:core`: dominio compartido, modelos puros, resultados, errores, contratos de autenticación, sesión y sincronización offline-first.
-- `:app:shared`: UI Compose compartida, navegación base, configuración cliente y networking multiplataforma.
-- `:app:androidApp`: entrada Android y configuración propia de Android.
-- `:app:desktopApp`: entrada Compose Desktop para Windows, macOS y Linux.
-- `:server`: servidor Ktor, configuración HTTP, rutas, migraciones y conexión opcional a MySQL.
-- `app/iosApp`: proyecto Xcode, no módulo Gradle, que consume el framework KMP `Shared` generado desde `:app:shared`.
+| Ruta | Responsabilidad |
+|---|---|
+| `core` | Dominio, contratos de aplicación, modelos compartidos y sincronización |
+| `app/shared` | UI Compose, navegación y comunicación compartida |
+| `app/androidApp` | Entrada y configuración Android |
+| `app/desktopApp` | Entrada Desktop para Windows, macOS y Linux |
+| `app/iosApp` | Proyecto Xcode que consume el framework KMP compartido |
+| `server` | API Ktor, configuración, migraciones y acceso a MySQL |
+| `docs` | Requerimientos, decisiones, pruebas y gestión del proyecto |
 
-## Requisitos
+## Equipo Nexo Lácteo
 
-- JDK compatible con Gradle/Kotlin del proyecto.
+| Integrante | Código | Rama de trabajo |
+|---|---:|---|
+| Jhon Willian Mayta Arotaype | 202413545 | `willian-mayta` |
+| Luis Alejandro Chino Leon | 202410802 | `luis-chino` |
+| Yenifher Sharai Sanchez Chipa | 202411762 | `yenifher-sanchez` |
+| Kevin Jefherson Marca Huaman | 202410821 | `kevin-marca` |
+
+El docente será agregado como colaborador cuando acepte la invitación correspondiente.
+
+## Flujo de trabajo
+
+1. `main` conserva únicamente entregas integradas y estables.
+2. Cada integrante trabaja en su rama personal.
+3. Antes del push se ejecutan las pruebas relacionadas con el cambio.
+4. Cada aporte entra a `main` mediante Pull Request.
+5. El Pull Request debe ser revisado por un integrante distinto del autor.
+6. Las entregas aprobadas se identifican mediante versionado semántico.
+
+Consulta [CONTRIBUTING.md](CONTRIBUTING.md) y [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) antes de comenzar.
+
+## Ejecutar el proyecto
+
+### Requisitos
+
+- JDK compatible con la versión de Gradle/Kotlin del proyecto.
 - Android Studio o IntelliJ IDEA con soporte KMP.
-- Android SDK para compilar Android.
-- Xcode en macOS para compilar y ejecutar iOS.
-- MySQL local o remoto solo cuando se prueben endpoints que dependan de base de datos.
+- Android SDK para Android.
+- Xcode en macOS para iOS.
+- MySQL cuando se validen funciones que dependan de persistencia central.
 
-## Abrir el Proyecto
-
-Abre `D:\Ecolactea\Ecolactea_V100` desde el IDE. La estructura Gradle esperada es:
-
-```text
-:app
-|-- :app:androidApp
-|-- :app:desktopApp
-|-- :app:shared
-:core
-:server
-```
-
-## Ejecutar Desktop
+### Desktop
 
 ```powershell
 .\gradlew.bat :app:desktopApp:run
 ```
 
-En Windows este es el target ejecutable principal para validar la app visualmente.
-
-## Compilar Android
+### Android
 
 ```powershell
 .\gradlew.bat :app:androidApp:assembleDebug
 ```
 
-No requiere emulador ni dispositivo para validar compilación.
-
-## Ejecutar Server
+### Servidor
 
 ```powershell
 .\gradlew.bat :server:run
 ```
 
-Luego prueba:
+Comprobación básica:
 
 ```powershell
 Invoke-RestMethod http://localhost:8080/health
 ```
 
-Respuesta esperada:
-
-```json
-{"status":"ok","service":"ecolactea-server"}
-```
-
-## Configurar MySQL
-
-El servidor no necesita MySQL para compilar, testear ni responder `/health`. Para activar conexión y migraciones, define variables de entorno antes de iniciar `:server:run`:
+### MySQL
 
 ```powershell
 $env:DB_URL = "jdbc:mysql://localhost:3306/ecolactea"
 $env:DB_USER = "ecolactea_user"
-$env:DB_PASSWORD = "cambiar-en-entorno-local"
+$env:DB_PASSWORD = "definir-solo-en-el-entorno-local"
 $env:DB_POOL_SIZE = "10"
 ```
 
-No versiones contraseñas reales. Las migraciones viven en `server/src/main/resources/db/migration`.
-
-## iOS Desde Windows
-
-Los targets `iosArm64` e `iosSimulatorArm64` se mantienen. En Windows puede aparecer el aviso de que `iosSimulatorArm64Test` requiere macOS; eso es esperado y no significa que el proyecto esté roto. La ejecución final de iOS se realiza en macOS con Xcode abriendo `app/iosApp`.
-
-## Dónde Desarrollar
-
-- Código común de dominio: `core/src/commonMain/kotlin/pe/gob/huata/ecolactea/core`.
-- UI común, navegación y networking cliente: `app/shared/src/commonMain/kotlin/pe/gob/huata/ecolactea/shared`.
-- Android específico: `app/androidApp` y `app/shared/src/androidMain`.
-- iOS específico: `app/iosApp` y `app/shared/src/iosMain`.
-- Desktop específico: `app/desktopApp` y `app/shared/src/jvmMain`.
-- Backend: `server/src/main/kotlin/pe/gob/huata/ecolactea/server`.
+Nunca se deben versionar contraseñas, tokens ni archivos `.env` reales.
 
 ## Pruebas
 
@@ -112,10 +147,17 @@ Los targets `iosArm64` e `iosSimulatorArm64` se mantienen. En Windows puede apar
 .\gradlew.bat :server:test
 ```
 
-Para validación amplia en Windows:
+Validación amplia en Windows:
 
 ```powershell
 .\gradlew.bat build
 .\gradlew.bat :app:androidApp:assembleDebug
-.\gradlew.bat :app:desktopApp:run
 ```
+
+## Documentación
+
+El índice y estado de los documentos se encuentra en [docs/README.md](docs/README.md). Las fuentes maestras son la Matriz Integral V2 y el Informe Integral V2 ubicados en `docs/project-management`.
+
+## Nota de validación
+
+Los requerimientos, casos de prueba y decisiones de negocio incluidos representan la propuesta aprobada por el equipo. Las 21 incertidumbres registradas deben resolverse con la planta antes de automatizar precios, sanciones, rangos de calidad, tolerancias o fórmulas definitivas.
