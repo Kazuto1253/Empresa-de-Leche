@@ -8,6 +8,8 @@ Ecoláctea Digital se encuentra en fase de construcción académica. La base té
 
 La línea base documental propuesta es `v0.1.0`. Ningún requerimiento funcional se declara terminado en esta etapa.
 
+La rama del Integrante 1 incorpora el [primer incremento de RF-34](docs/RF-34.md): autenticación, sesión y autorización por rol. Conserva pendientes de validación y almacenamiento por plataforma; no se declara terminado.
+
 ## Problema que resuelve
 
 El acopio de leche depende parcialmente de planillas y registros distribuidos que dificultan consolidar oportunamente cantidades, calidad, diferencias entre campo y planta, liquidaciones y pagos. La conectividad variable en las rutas también impide depender de una conexión permanente.

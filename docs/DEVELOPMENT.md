@@ -10,6 +10,8 @@ El punto de entrada común es `pe.gob.huata.ecolactea.App`. La UI compartida viv
 
 La URL del backend se configura con `AppEnvironment`; no codificar IPs personales en repositorios ni casos de uso.
 
+El incremento de autenticación, sus endpoints, bootstrap externo y almacenamiento por plataforma se describen en [RF-34](RF-34.md). Desktop admite `ECOLACTEA_API_URL`; Android usa la propiedad Gradle `ecolactea.apiBaseUrl`. Nunca pasar credenciales MySQL al cliente.
+
 ## Backend
 
 Las rutas Ktor viven en `server/src/main/kotlin/pe/gob/huata/ecolactea/server/Routing.kt`. Nuevas rutas deben depender de contratos o servicios de aplicación, no de tablas directamente desde el dominio.

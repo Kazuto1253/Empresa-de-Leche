@@ -4,6 +4,7 @@ data class ServerConfig(
     val host: String,
     val port: Int,
     val database: DatabaseConfig?,
+    val bootstrap: BootstrapConfig? = null,
 ) {
     companion object {
         fun fromEnvironment(env: Map<String, String> = System.getenv()): ServerConfig {
@@ -11,6 +12,10 @@ data class ServerConfig(
             return ServerConfig(
                 host = env["SERVER_HOST"]?.takeIf(String::isNotBlank) ?: "0.0.0.0",
                 port = env["SERVER_PORT"]?.toIntOrNull() ?: 8080,
+                bootstrap = if (env["AUTH_BOOTSTRAP_ENABLED"] == "true") BootstrapConfig(
+                    requireNotNull(env["AUTH_BOOTSTRAP_USERNAME"]) { "Bootstrap username required" },
+                    requireNotNull(env["AUTH_BOOTSTRAP_PASSWORD"]) { "Bootstrap password required" },
+                ) else null,
                 database = databaseUrl?.let {
                     DatabaseConfig(
                         url = it,
@@ -24,9 +29,13 @@ data class ServerConfig(
     }
 }
 
+class BootstrapConfig(val username: String, val password: String)
+
 data class DatabaseConfig(
     val url: String,
     val user: String,
     val password: String,
     val maxPoolSize: Int,
-)
+) {
+    override fun toString() = "DatabaseConfig([REDACTED])"
+}

@@ -7,6 +7,10 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
+import pe.gob.huata.ecolactea.server.auth.AuthService
+import pe.gob.huata.ecolactea.server.auth.authRoutes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Serializable
 data class HealthResponse(
@@ -23,8 +27,10 @@ data class DatabaseHealthResponse(
 fun Application.configureRouting(
     config: ServerConfig,
     dataSource: HikariDataSource?,
+    auth: AuthService? = null,
 ) {
     routing {
+        authRoutes(auth)
         get("/health") {
             call.respond(HealthResponse(status = "ok", service = "ecolactea-server"))
         }
@@ -33,7 +39,10 @@ fun Application.configureRouting(
             call.respond(
                 DatabaseHealthResponse(
                     configured = config.database != null,
-                    reachable = dataSource?.isRunning == true,
+                    reachable = withContext(Dispatchers.IO) {
+                        try { dataSource?.connection?.use { it.isValid(2) } == true }
+                        catch (_: Exception) { false }
+                    },
                 ),
             )
         }

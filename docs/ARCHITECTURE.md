@@ -25,7 +25,7 @@ El usuario no escoge rol en login. El backend autentica y devuelve identidad y r
 
 ## Autenticación y Sesión
 
-RF-34 queda preparado con contratos para:
+RF-34 tiene un primer incremento implementado, pendiente de validación integral; véase [RF-34](RF-34.md). Reutiliza los contratos:
 
 - `AuthRepository`: login, refresh, validate y logout.
 - `SessionStore`: lectura/escritura/limpieza de sesión persistida.

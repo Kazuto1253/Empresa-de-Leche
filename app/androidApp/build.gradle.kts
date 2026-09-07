@@ -29,6 +29,9 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        val apiUrl = providers.gradleProperty("ecolactea.apiBaseUrl").orElse("https://localhost:8080").get()
+        require(apiUrl.startsWith("https://") || apiUrl.startsWith("http://"))
+        buildConfigField("String", "API_BASE_URL", "\"${apiUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
     }
     packaging {
         resources {
@@ -49,6 +52,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }

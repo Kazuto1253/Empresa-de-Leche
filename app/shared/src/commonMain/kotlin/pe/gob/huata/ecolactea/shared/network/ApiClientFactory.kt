@@ -4,8 +4,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.URLProtocol
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
@@ -22,9 +20,8 @@ fun createApiClient(environment: AppEnvironment): HttpClient =
             connectTimeoutMillis = 10_000
             socketTimeoutMillis = 15_000
         }
-        install(Logging) {
-            level = LogLevel.INFO
-        }
+        // Authentication traffic is never logged (including headers and request bodies).
+        followRedirects = false
         defaultRequest {
             url.takeFrom(environment.apiBaseUrl)
             if (url.protocol == URLProtocol.HTTP || url.protocol == URLProtocol.HTTPS) {

@@ -16,4 +16,5 @@ data class AuthenticatedUser(
     val username: String,
     val role: Role,
     val providerId: String? = null,
+    val permissions: Set<Permission> = emptySet(),
 )

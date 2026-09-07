@@ -66,9 +66,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutinesTest)
+            implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
         }
         jvmMain.dependencies {
             implementation(libs.ktor.clientCio)
+            implementation("net.java.dev.jna:jna-platform:5.17.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.clientDarwin)
