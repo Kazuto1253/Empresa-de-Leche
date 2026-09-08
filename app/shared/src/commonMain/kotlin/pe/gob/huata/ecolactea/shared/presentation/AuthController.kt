@@ -30,6 +30,7 @@ enum class RoleDestination(val title: String) {
 class AuthController(private val repository: AuthRepository, private val store: SessionStore) {
     private val mutableState = MutableStateFlow<AuthState>(AuthState.Starting)
     val state = mutableState.asStateFlow()
+    suspend fun currentSession() = store.read()
     private val operation = Mutex()
 
     suspend fun restore() = exclusive {
@@ -77,5 +78,6 @@ fun AppError.message(): String = when (this) {
     AppError.Forbidden -> "No tienes permiso para esta operación."
     AppError.Offline -> "No se pudo conectar. Revisa tu conexión e inténtalo otra vez."
     is AppError.Unexpected -> safeMessage
+    is AppError.Remote -> if (statusCode >= 500) "Error del servidor ($statusCode)." else safeMessage
     else -> "Servicio no disponible. Inténtalo nuevamente."
 }

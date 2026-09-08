@@ -9,6 +9,11 @@ import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
 import pe.gob.huata.ecolactea.server.auth.AuthService
 import pe.gob.huata.ecolactea.server.auth.authRoutes
+import pe.gob.huata.ecolactea.server.operations.operationsRoutes
+import pe.gob.huata.ecolactea.server.operations.userAdminRoutes
+import pe.gob.huata.ecolactea.server.collection.collectionRoutes
+import pe.gob.huata.ecolactea.server.quality.qualityRoutes
+import pe.gob.huata.ecolactea.server.finance.financeRoutes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import io.ktor.server.http.content.staticFiles
@@ -33,6 +38,11 @@ fun Application.configureRouting(
 ) {
     routing {
         authRoutes(auth)
+        operationsRoutes(dataSource, auth)
+        collectionRoutes(dataSource, auth)
+        qualityRoutes(dataSource, auth)
+        financeRoutes(dataSource, auth)
+        userAdminRoutes(dataSource, auth)
         config.webRoot?.let { root ->
             require(File(root, "index.html").isFile) { "WEB_ROOT must contain the generated index.html" }
             // Root-only navigation currently needs no SPA catch-all; unknown /api routes remain 404.

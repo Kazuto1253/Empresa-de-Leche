@@ -41,7 +41,8 @@ class HttpAuthRepository(private val client: HttpClient) : AuthRepository {
                 "UNAUTHORIZED" -> AppError.Unauthorized
                 "FORBIDDEN" -> AppError.Forbidden
                 "VALIDATION" -> AppError.Validation(error.fieldErrors)
-                else -> AppError.Remote(response.status.value, "Servicio no disponible")
+                null -> if (response.status.value == 401) AppError.Unauthorized else AppError.Remote(response.status.value, if (response.status.value >= 500) "Error del servidor" else "Respuesta inválida del servidor")
+                else -> AppError.Remote(response.status.value, if (response.status.value >= 500) "Error del servidor" else "Servicio no disponible")
             })
         }
     } catch (cancelled: CancellationException) { throw cancelled }

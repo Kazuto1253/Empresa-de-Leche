@@ -5,5 +5,6 @@ data class AppEnvironment(
 ) {
     companion object {
         val LocalDevelopment = AppEnvironment(apiBaseUrl = "http://localhost:8080")
+        val WebDevelopment = AppEnvironment(apiBaseUrl = "http://127.0.0.1:8080")
     }
 }

@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.ktor.serverContentNegotiation)
     implementation(libs.ktor.serverStatusPages)
     implementation(libs.ktor.serverCallLogging)
+    implementation(libs.ktor.serverCors)
     implementation(libs.ktor.serializationKotlinxJson)
     implementation(libs.kotlinx.serializationJson)
     implementation(libs.hikari)
@@ -28,6 +29,13 @@ dependencies {
     implementation(libs.exposed.jdbc)
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
+}
+
+tasks.named<ProcessResources>("processResources") {
+    from(rootProject.file("database/migrations")) {
+        include("V*.sql")
+        into("db/migration")
+    }
 }
 
 val integrationTest by sourceSets.creating
@@ -45,4 +53,11 @@ tasks.register<Test>("mysqlIntegrationTest") {
     classpath = integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     mustRunAfter(tasks.test)
+}
+
+tasks.register<JavaExec>("seedDevData") {
+    group = "development"
+    description = "Explicitly and idempotently populates the configured database with DEV-only data."
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("pe.gob.huata.ecolactea.server.seed.DevDataSeederKt")
 }
