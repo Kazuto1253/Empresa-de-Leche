@@ -27,6 +27,17 @@ class JdbcAuthPersistence(private val dataSource: DataSource) : AuthPersistence 
         dataSource.connection.use { connection ->
             connection.autoCommit = false
             try {
+                // Serialize initial bootstrap even when app_user is empty. Bootstrap is not a user-creation API.
+                connection.prepareStatement("SELECT code FROM app_role WHERE code = 'ADMINISTRADOR_GENERAL' FOR UPDATE").use {
+                    it.executeQuery().use { rows -> check(rows.next()) { "Administrator role unavailable" } }
+                }
+                val existing = connection.prepareStatement("SELECT COUNT(*) FROM app_user").use {
+                    it.executeQuery().use { rows -> rows.next(); rows.getLong(1) }
+                }
+                if (existing > 0) {
+                    connection.commit()
+                    return
+                }
                 connection.prepareStatement("SELECT id FROM app_user WHERE username = ? FOR UPDATE").use { query ->
                     query.setString(1, username)
                     query.executeQuery().use { rows ->

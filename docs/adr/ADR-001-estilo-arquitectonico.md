@@ -65,3 +65,7 @@ Se descarta porque la planta necesita consolidación, permisos, auditoría y rep
 - Los adaptadores implementan esos contratos.
 - UI y API no duplican reglas de negocio.
 - Las pruebas pueden usar repositorios y dispositivos falsos.
+
+## Ampliación de plataforma V2
+
+El ciclo posterior al Commit 01 incorpora Web Compose (wasmJs con fallback JS) como cliente de la misma API Ktor y establece SQLite local para los clientes offline. Ktor sigue siendo el único backend y MySQL 8.4 la base central. No se agrega un backend Web alternativo. La decisión original de Clean Architecture y composición manual se conserva; detalle vigente en ARCHITECTURE.md y DATA_MODEL_V2.md.

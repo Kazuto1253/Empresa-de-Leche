@@ -29,3 +29,20 @@ dependencies {
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
 }
+
+val integrationTest by sourceSets.creating
+configurations[integrationTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[integrationTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly.get())
+dependencies {
+    add(integrationTest.implementationConfigurationName, sourceSets.main.get().output)
+    add(integrationTest.implementationConfigurationName, project(":app:shared"))
+    add(integrationTest.implementationConfigurationName, "io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.get()}")
+}
+tasks.register<Test>("mysqlIntegrationTest") {
+    description = "Runs RF-34 through the shared HTTP repository and real MySQL; requires external DB configuration."
+    group = "verification"
+    testClassesDirs = integrationTest.output.classesDirs
+    classpath = integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    mustRunAfter(tasks.test)
+}

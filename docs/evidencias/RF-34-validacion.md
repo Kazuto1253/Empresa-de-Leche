@@ -104,3 +104,92 @@ server/src/test/kotlin/pe/gob/huata/ecolactea/server/AuthRoutesTest.kt
 server/src/test/kotlin/pe/gob/huata/ecolactea/server/AuthTestFixture.kt
 server/src/test/kotlin/pe/gob/huata/ecolactea/server/PasswordHasherTest.kt
 ```
+
+## Ciclo de plataforma posterior al Commit 01 — 2026-09-07
+
+Esta sección corresponde al ciclo siguiente; los resultados anteriores son históricos y no se atribuyen a las nuevas plataformas.
+
+### Base y alcance
+
+- Rama `willian-mayta`, HEAD inicial `6c710814284d0a5f684197b2cb25fc923d2419cb`, árbol inicialmente limpio.
+- `main` se conserva en `c6855e1b0b1cd1e6a8cdb6c8cf3298916e2c28d1`. No merge, rebase, amend ni push.
+- Se añade `app/webApp` con targets JS/Wasm, reutilizando core/shared; Ktor sirve el artefacto mediante WEB_ROOT.
+- Configuración externa literal, script local y bootstrap restringido a base sin usuarios. V1/V2 no se modificaron ni se creó otra migración.
+- Modelo lógico global DATA_MODEL_V2.md y contratos LocalDataStore/LocalTransaction. No se implementan RF funcionales de otros integrantes.
+
+### Resultados ejecutados
+
+| Comando / comprobación | Resultado real |
+|---|---|
+| `:core:jvmTest` | 14 pruebas, 0 fallos, 0 omitidas |
+| `:app:shared:jvmTest` | 9 pruebas, 0 fallos, 0 omitidas; incluye DPAPI Windows |
+| `:server:test` | 12 pruebas, 0 fallos, 0 omitidas; incluye configuración externa y rutas Web/API |
+| `:server:compileIntegrationTestKotlin` | Correcto tras añadir la dependencia explícita de ContentNegotiation del cliente |
+| `:app:androidApp:assembleDebug` | Correcto; APK debug generado |
+| `:app:desktopApp:build` | Correcto; JVM compilado. No ejecuta pruebas Desktop propias (NO-SOURCE), ni certifica macOS/Linux |
+| `:server:shadowJar` | Correcto; server/build/libs/server-all.jar |
+| Comando conjunto de las siete tareas anteriores, `--max-workers=2` | BUILD SUCCESSFUL, código 0, 1m24s, 99 tareas (11 ejecutadas, 88 actualizadas) |
+| `:app:webApp:composeCompatibilityBrowserDistribution`, `--max-workers=1` | BUILD SUCCESSFUL, código 0, 21m14s; artefactos JS y Wasm y selector compatible generados. Webpack advirtió por tamaño de bundles (Wasm de Skiko 8.25 MiB y aplicación 3.59 MiB) |
+| Repetición incremental Web con `--max-workers=2` | BUILD SUCCESSFUL, código 0, 48s; 85 tareas (11 ejecutadas, 74 actualizadas). Confirma lockfiles y orden JS/Wasm |
+| `:server:mysqlIntegrationTest` con ECOLACTEA_CONFIG_FILE | Falló, código 1, 1m42s: `DB_USER is required when DB_URL is configured`. No omitida ni simulada |
+| Servicio MySQL84 y conexión TCP local 3306 | Running; conexión TCP establecida. Esto no prueba autenticación SQL |
+| GET real `http://127.0.0.1:18080/health` | HTTP 200, `{"status":"ok","service":"ecolactea-server"}` |
+| GET real `http://127.0.0.1:18080/health/db` sin credenciales | HTTP 200, `{"configured":false,"reachable":false}` |
+| Artefacto JS servido por Ktor en 18081, navegador integrado | Login Compose renderizado; campos vacíos muestran validación. Envío sintético llega a Ktor (POST 503), UI muestra servicio no disponible y limpia contraseña |
+
+Los tres conjuntos de pruebas suman 35 pruebas sin fallos. No se ejecutó Xcode ni se declara iOS probado. `build` global y `core:allTests` del ciclo anterior no se vuelven a atribuir a este ciclo: se priorizaron pruebas JVM y builds específicos de plataforma.
+
+### Fallos encontrados y corregidos durante el trabajo
+
+- DSL de compatibilidad Web no disponible en el plugin instalado: se usa la tarea Compose registrada automáticamente. ComposeViewport requiere opt-in experimental, añadido.
+- Compilación de la prueba MySQL: dependencia de cliente ContentNegotiation no transitiva, declarada explícitamente y compilación repetida correctamente.
+- Primera distribución Web: faltaba build/wasm/yarn.lock después de instalaciones Yarn concurrentes. Se repitió en serie y se añadió orden entre tareas de instalación JS/Wasm. Los lockfiles generados se conservan para reproducibilidad.
+
+### MySQL y RF-34: limitación material
+
+`secrets.properties` está ignorado por Git y no contiene credenciales válidas de DB_USER/DB_PASSWORD. Se solicitó completarlas externamente, sin enviarlas por chat. No se cambió ninguna contraseña MySQL ni se creó una cuenta privilegiada para eludir esta dependencia.
+
+Flyway V1/V2, historial SQL, login de cuatro roles, refresh/rotación/replay, /me, logout, bloqueo y permisos contra MySQL quedan **NO VERIFICADOS**. La prueba explícita está compilada y preparada, pero falló antes de abrir JDBC. El servidor usado para comprobar salud y Web se ejecutó sin configuración DB efectiva, por eso /health/db sigue false/false.
+
+RF-34 permanece **PARCIAL**. Android conserva Keystore y Windows DPAPI; iOS, macOS y Linux tienen memoria y requieren adaptadores seguros probados en sus plataformas. Web tiene memoria por pestaña, pierde sesión al recargar y requiere implementar cookies HttpOnly/CSRF para persistencia. No se guardan tokens en SQLite ni almacenamiento persistente de navegador. FC-01–FC-04 y nuevos RF continúan pendientes; bootstrap inicial no es un módulo administrativo.
+
+### Inventario del ciclo
+
+Archivos creados y versionados:
+
+```text
+.env.example
+app/webApp/build.gradle.kts
+app/webApp/src/webMain/kotlin/pe/gob/huata/ecolactea/web/Main.kt
+app/webApp/src/webMain/resources/index.html
+core/src/commonMain/kotlin/pe/gob/huata/ecolactea/core/application/sync/LocalStorageContracts.kt
+docs/DATA_MODEL_V2.md
+kotlin-js-store/wasm/yarn.lock
+kotlin-js-store/yarn.lock
+scripts/run-local-server.ps1
+server/src/integrationTest/kotlin/pe/gob/huata/ecolactea/server/MySqlAuthIntegrationTest.kt
+server/src/main/kotlin/pe/gob/huata/ecolactea/server/ExternalConfig.kt
+server/src/test/kotlin/pe/gob/huata/ecolactea/server/ExternalConfigTest.kt
+server/src/test/kotlin/pe/gob/huata/ecolactea/server/WebRoutingTest.kt
+```
+
+Archivos modificados:
+
+```text
+README.md
+app/shared/build.gradle.kts
+build.gradle.kts
+core/build.gradle.kts
+docs/ARCHITECTURE.md
+docs/DEVELOPMENT.md
+docs/RF-34.md
+docs/adr/ADR-001-estilo-arquitectonico.md
+docs/evidencias/RF-34-validacion.md
+server/build.gradle.kts
+server/src/main/kotlin/pe/gob/huata/ecolactea/server/Routing.kt
+server/src/main/kotlin/pe/gob/huata/ecolactea/server/ServerConfig.kt
+server/src/main/kotlin/pe/gob/huata/ecolactea/server/auth/JdbcAuthPersistence.kt
+settings.gradle.kts
+```
+
+Configuración local ignorada: secrets.properties (no incluida en el commit). Logs, APK, JAR y distribución Web permanecen en directorios build ignorados.

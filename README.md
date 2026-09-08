@@ -57,10 +57,12 @@ El rol es determinado por el backend. El usuario no selecciona su rol al iniciar
 - Desktop JVM para Windows, macOS y Linux.
 - iOS preparado mediante el proyecto Xcode de `app/iosApp`; requiere macOS para compilarse.
 - Backend Kotlin con Ktor y API REST JSON.
-- MySQL, HikariCP y migraciones Flyway.
+- MySQL 8.4 central, HikariCP y migraciones Flyway.
+- Web Compose Multiplatform: Wasm con distribución compatible y fallback JavaScript.
+- SQLite local previsto para Android/iOS/Desktop offline; contratos preparados, sin RF de acopio implementados.
 - Clean Architecture y operación offline-first.
 
-No se contempla una aplicación web, Docker ni Docker Compose en esta línea base.
+Ktor es el único backend de Android, iOS, Desktop y Web. Todos consumen REST JSON `/api/v1`; ningún cliente accede directamente a MySQL. No se utiliza Laravel, Spring, Angular ni Docker.
 
 ## Estructura del repositorio
 
@@ -70,6 +72,7 @@ No se contempla una aplicación web, Docker ni Docker Compose en esta línea bas
 | `app/shared` | UI Compose, navegación y comunicación compartida |
 | `app/androidApp` | Entrada y configuración Android |
 | `app/desktopApp` | Entrada Desktop para Windows, macOS y Linux |
+| `app/webApp` | Cliente Web Compose que reutiliza core y shared |
 | `app/iosApp` | Proyecto Xcode que consume el framework KMP compartido |
 | `server` | API Ktor, configuración, migraciones y acceso a MySQL |
 | `docs` | Requerimientos, decisiones, pruebas y gestión del proyecto |
@@ -117,6 +120,15 @@ Consulta [CONTRIBUTING.md](CONTRIBUTING.md) y [docs/GIT_WORKFLOW.md](docs/GIT_WO
 ```powershell
 .\gradlew.bat :app:androidApp:assembleDebug
 ```
+
+### Web
+
+```powershell
+.\gradlew.bat :app:webApp:composeCompatibilityBrowserDistribution
+.\scripts\run-local-server.ps1 -WithWeb
+```
+
+El artefacto se genera en `app/webApp/build/dist/composeWebCompatibility/productionExecutable`. Ktor sirve `/` y la API bajo el mismo origen. Configuración y límites de sesión: [Desarrollo](docs/DEVELOPMENT.md).
 
 ### Servidor
 

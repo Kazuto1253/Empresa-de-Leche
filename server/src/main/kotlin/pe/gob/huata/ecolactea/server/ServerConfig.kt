@@ -5,13 +5,15 @@ data class ServerConfig(
     val port: Int,
     val database: DatabaseConfig?,
     val bootstrap: BootstrapConfig? = null,
+    val webRoot: String? = null,
 ) {
     companion object {
-        fun fromEnvironment(env: Map<String, String> = System.getenv()): ServerConfig {
+        fun fromEnvironment(env: Map<String, String> = ExternalConfig.load()): ServerConfig {
             val databaseUrl = env["DB_URL"]?.takeIf(String::isNotBlank)
             return ServerConfig(
                 host = env["SERVER_HOST"]?.takeIf(String::isNotBlank) ?: "0.0.0.0",
                 port = env["SERVER_PORT"]?.toIntOrNull() ?: 8080,
+                webRoot = env["WEB_ROOT"]?.takeIf(String::isNotBlank),
                 bootstrap = if (env["AUTH_BOOTSTRAP_ENABLED"] == "true") BootstrapConfig(
                     requireNotNull(env["AUTH_BOOTSTRAP_USERNAME"]) { "Bootstrap username required" },
                     requireNotNull(env["AUTH_BOOTSTRAP_PASSWORD"]) { "Bootstrap password required" },

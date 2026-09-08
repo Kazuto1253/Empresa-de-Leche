@@ -20,6 +20,9 @@ kotlin {
     }
     
     jvm()
+    js { browser() }
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs { browser() }
     
     android {
        namespace = "pe.gob.huata.ecolactea.app.shared"
@@ -43,6 +46,9 @@ kotlin {
     }
     
     sourceSets {
+        webMain.dependencies {
+            implementation("io.ktor:ktor-client-js:${libs.versions.ktor.get()}")
+        }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)

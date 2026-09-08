@@ -11,6 +11,8 @@ import pe.gob.huata.ecolactea.server.auth.AuthService
 import pe.gob.huata.ecolactea.server.auth.authRoutes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import io.ktor.server.http.content.staticFiles
+import java.io.File
 
 @Serializable
 data class HealthResponse(
@@ -31,6 +33,11 @@ fun Application.configureRouting(
 ) {
     routing {
         authRoutes(auth)
+        config.webRoot?.let { root ->
+            require(File(root, "index.html").isFile) { "WEB_ROOT must contain the generated index.html" }
+            // Root-only navigation currently needs no SPA catch-all; unknown /api routes remain 404.
+            staticFiles("/", File(root))
+        }
         get("/health") {
             call.respond(HealthResponse(status = "ok", service = "ecolactea-server"))
         }
