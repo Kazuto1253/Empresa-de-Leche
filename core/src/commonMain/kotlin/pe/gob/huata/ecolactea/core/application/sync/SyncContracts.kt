@@ -14,8 +14,10 @@ enum class ConnectivityStatus {
 enum class SyncState {
     PENDING,
     SYNCING,
+    SYNCED,
     SYNCHRONIZED,
     CONFLICT,
+    FAILED_RETRYABLE,
     FAILED,
 }
 
@@ -50,6 +52,11 @@ sealed interface SyncReceipt {
 
 interface ConnectivityMonitor {
     suspend fun currentStatus(): ConnectivityStatus
+}
+
+interface ConnectivityEvents {
+    fun start(onOnline: () -> Unit)
+    fun stop()
 }
 
 interface PendingOperationStore {

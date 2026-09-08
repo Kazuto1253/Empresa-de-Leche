@@ -10,6 +10,18 @@ sealed interface AppResult<out T> {
 @Serializable
 sealed interface AppError {
     @Serializable
+    data object InvalidCredentials : AppError
+
+    @Serializable
+    data object AccountBlocked : AppError
+
+    @Serializable
+    data object SessionExpired : AppError
+
+    @Serializable
+    data object SessionRevoked : AppError
+
+    @Serializable
     data class Validation(val fields: Map<String, String>) : AppError
 
     @Serializable

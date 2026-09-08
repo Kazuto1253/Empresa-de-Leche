@@ -20,14 +20,19 @@ object DatabaseFactory {
                 minimumIdle = 1
                 isAutoCommit = false
                 transactionIsolation = "TRANSACTION_READ_COMMITTED"
+                connectionInitSql = "SET time_zone = '${BusinessCalendar.mysqlOffset}'"
             },
         )
 
-        Flyway.configure()
+        val flyway = Flyway.configure()
             .dataSource(dataSource)
             .locations("classpath:db/migration")
             .load()
-            .migrate()
+
+        if (System.getenv("FLYWAY_REPAIR_ENABLED").equals("true", ignoreCase = true)) {
+            flyway.repair()
+        }
+        flyway.migrate()
 
         Database.connect(dataSource)
         return dataSource

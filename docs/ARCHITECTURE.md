@@ -10,6 +10,7 @@ La base usa Clean Architecture de forma práctica: dependencias hacia el dominio
 - `core/application/sync`: contratos offline-first para conectividad, outbox, idempotencia y sincronización.
 - `core/network`: modelos DTO compartidos para envelopes y errores API.
 - `app/shared`: presentación Compose, navegación base, configuración de entorno y cliente HTTP.
+- `app/webApp`: entrada Compose de navegador, targets wasmJs/js y distribución compatible. Reutiliza core/shared; Web opera online.
 - `server`: Ktor, rutas REST, status pages, logging, configuración externa, MySQL, Flyway y adapters de infraestructura.
 
 ## Roles Oficiales
@@ -25,7 +26,7 @@ El usuario no escoge rol en login. El backend autentica y devuelve identidad y r
 
 ## Autenticación y Sesión
 
-RF-34 queda preparado con contratos para:
+RF-34 tiene un primer incremento implementado, pendiente de validación integral; véase [RF-34](RF-34.md). Reutiliza los contratos:
 
 - `AuthRepository`: login, refresh, validate y logout.
 - `SessionStore`: lectura/escritura/limpieza de sesión persistida.
@@ -44,13 +45,17 @@ La base incluye contratos para operación sin conexión:
 - `PendingOperation`
 - `SyncConflict`
 
-No se implementan RF offline todavía. La persistencia local KMP definitiva debe añadirse cuando un RF real la necesite; SQLDelight puede evaluarse entonces si compensa su coste.
+SQLite local es la base prevista para Android/iOS/Desktop. SQLDelight y sus drivers KMP se integrarán con RF-08 por su responsable. `LocalDataStore` define transacciones por usuario/dispositivo; `LocalTransaction` reutiliza `PendingOperationStore` para guardar registros y outbox atómicamente. No contiene tokens ni reglas de acopio. Web no requiere SQLite.
+
+El [modelo lógico V2](DATA_MODEL_V2.md) define ownership, idempotencia, FK, cardinalidades y pendientes de validación. No se implementan RF offline en este ciclo.
 
 ## Backend
 
-`/health` siempre responde sin depender de MySQL. `/health/db` informa si la base fue configurada y si el pool está activo.
+`/health` responde sin depender de MySQL. `/health/db` indica configuración y comprueba una conexión real del pool.
 
-MySQL se activa solo cuando existe `DB_URL`. Al arrancar con base configurada, Flyway ejecuta migraciones desde `server/src/main/resources/db/migration`.
+Android, iOS, Windows, macOS, Linux y Web consumen la misma API REST `/api/v1`. Ktor puede servir la distribución Web en `/` mediante `WEB_ROOT`, sin segundo backend ni acceso directo de clientes a MySQL. No hay Laravel, Spring, Angular ni Docker. Las rutas desconocidas de API siguen devolviendo 404, no el HTML de la aplicación.
+
+La configuración admite variables de entorno y un archivo UTF-8 KEY=value seleccionado explícitamente mediante `ECOLACTEA_CONFIG_FILE`. El entorno tiene prioridad; no hay interpolación ni logs de secretos. MySQL se activa solo cuando existe `DB_URL`. Al arrancar con base configurada, Flyway ejecuta migraciones desde `server/src/main/resources/db/migration`.
 
 ## Dependency Injection
 

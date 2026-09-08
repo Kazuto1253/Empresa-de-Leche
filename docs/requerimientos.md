@@ -49,6 +49,8 @@ La versión V2 fue aprobada por el equipo como base de trabajo. Permanece pendie
 
 ## Reglas de control
 
+RF-34: primer incremento de autenticación y sesión implementado, **no terminado**. Alcance, pruebas y pendientes: [RF-34](RF-34.md). Los demás RF conservan su estado.
+
 - No usar la matriz anterior de 20 RF cuando contradiga V2.
 - No fijar precios, sanciones, rangos, tolerancias o fórmulas pendientes.
 - Toda implementación debe enlazar RF, criterio de aceptación y pruebas.

@@ -20,6 +20,9 @@ kotlin {
     }
     
     jvm()
+    js { browser() }
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs { browser() }
     
     android {
        namespace = "pe.gob.huata.ecolactea.app.shared"
@@ -43,6 +46,9 @@ kotlin {
     }
     
     sourceSets {
+        webMain.dependencies {
+            implementation("io.ktor:ktor-client-js:${libs.versions.ktor.get()}")
+        }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
@@ -66,9 +72,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutinesTest)
+            implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
         }
         jvmMain.dependencies {
             implementation(libs.ktor.clientCio)
+            implementation("net.java.dev.jna:jna-platform:5.17.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.clientDarwin)

@@ -11,6 +11,9 @@ kotlin {
     iosSimulatorArm64()
     
     jvm()
+    js { browser() }
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs { browser() }
     
     android {
        namespace = "pe.gob.huata.ecolactea.core"
