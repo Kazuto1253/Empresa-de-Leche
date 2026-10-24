@@ -1,0 +1,8 @@
+.claude/
+*.jks
+*.keystore
+*.p12
+*.sqlite
+*.sqlite-journal
+.DS_Store
+Thumbs.db

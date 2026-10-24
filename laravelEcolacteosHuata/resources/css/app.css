@@ -1,0 +1,139 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    /* Ecolácteos Huata — paleta de marca */
+    --color-huata-verde-50: #eefbf2;
+    --color-huata-verde-100: #d6f4de;
+    --color-huata-verde-200: #ade9c0;
+    --color-huata-verde-300: #7ad89d;
+    --color-huata-verde-400: #47bf78;
+    --color-huata-verde-500: #26a25c;
+    --color-huata-verde-600: #1a8049;
+    --color-huata-verde-700: #17663d;
+    --color-huata-verde-800: #155134;
+    --color-huata-verde-900: #12432c;
+    --color-huata-verde-950: #07261a;
+
+    --color-huata-celeste-50: #eff9ff;
+    --color-huata-celeste-100: #def0ff;
+    --color-huata-celeste-200: #b6e4ff;
+    --color-huata-celeste-300: #77d1ff;
+    --color-huata-celeste-400: #2fbaff;
+    --color-huata-celeste-500: #049fef;
+    --color-huata-celeste-600: #007fcc;
+    --color-huata-celeste-700: #0165a5;
+    --color-huata-celeste-800: #075587;
+    --color-huata-celeste-900: #0b4770;
+
+    --color-huata-amarillo-400: #ffd23f;
+    --color-huata-amarillo-500: #f7b500;
+    --color-huata-amarillo-600: #d99400;
+
+    --color-huata-rojo-500: #e0342b;
+    --color-huata-rojo-600: #c31f1f;
+    --color-huata-rojo-700: #9c1919;
+
+    --color-accent: var(--color-huata-verde-700);
+    --color-accent-content: var(--color-huata-verde-700);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-huata-verde-400);
+        --color-accent-content: var(--color-huata-verde-400);
+        --color-accent-foreground: var(--color-huata-verde-950);
+    }
+}
+
+@layer utilities {
+    @keyframes huata-fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(0.75rem);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-huata-in {
+        animation: huata-fade-in-up 0.5s ease-out both;
+    }
+
+    .animate-huata-in-delay-1 {
+        animation: huata-fade-in-up 0.5s ease-out 0.08s both;
+    }
+
+    .animate-huata-in-delay-2 {
+        animation: huata-fade-in-up 0.5s ease-out 0.16s both;
+    }
+
+    .animate-huata-in-delay-3 {
+        animation: huata-fade-in-up 0.5s ease-out 0.24s both;
+    }
+}
+
+/* Cuadros/tarjetas de los paneles: blanco un poco transparente con desenfoque, para que la imagen
+   de fondo no se note detrás. En modo oscuro, gris oscuro translúcido. */
+@utility huata-cuadro {
+    background-color: rgb(255 255 255 / 0.88);
+    backdrop-filter: blur(12px);
+
+    &:where(.dark, .dark *) {
+        background-color: rgb(23 23 23 / 0.85);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */
