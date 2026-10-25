@@ -69,6 +69,7 @@ enum Rol: string
                 ['turnos', 'Turnos de rutas y turnos de producción', 'clock'],
                 ['empresa', 'Empresa', 'building-office'],
                 ['asistencia.tomar', 'Tomar asistencia', 'calendar-days'],
+                ['vendedor.pedidos-web', 'Compras por web', 'inbox-arrow-down'],
                 ['planta.comunicados', 'Comunicados y asesoramiento', 'megaphone'],
             ],
             self::PersonalPlanta => [
@@ -98,6 +99,7 @@ enum Rol: string
                 ['panel', 'Panel', 'home'],
                 ['ventas', 'Venta', 'shopping-cart'],
                 ['produccion', 'Productos', 'cube'],
+                ['pedidos-web', 'Compras por web', 'inbox-arrow-down'],
                 ['historial', 'Historial de ventas', 'clock'],
                 ['clientes', 'Clientes', 'users'],
                 ['asistencia.mis', 'Asistencia', 'calendar-days'],
@@ -141,15 +143,59 @@ enum Rol: string
         $items = collect($this->navegacion())->keyBy('route');
 
         $secciones = [
-            'Administrador del sistema' => [
-                'admin.panel', 'admin.usuarios', 'admin.asignar-roles',
-                'admin.descuentos', 'admin.precios', 'planta.rutas', 'admin.turnos',
-                'admin.empresa', 'asistencia.tomar', 'planta.comunicados',
-            ],
+            'General' => ['admin.panel'],
+            'Gestión' => ['admin.usuarios', 'admin.asignar-roles', 'admin.descuentos', 'admin.precios'],
+            'Operaciones' => ['planta.rutas', 'admin.turnos', 'asistencia.tomar', 'vendedor.pedidos-web', 'planta.comunicados'],
+            'Configuración' => ['admin.empresa'],
         ];
 
         return collect($secciones)
             ->map(fn (array $rutas) => collect($rutas)->map(fn (string $ruta) => $items[$ruta])->values()->all())
             ->all();
+    }
+
+    /**
+     * Nombre corto del área, en mayúsculas, para la tarjeta del rol en la barra lateral.
+     */
+    public function etiquetaPanel(): string
+    {
+        return match ($this) {
+            self::Administrador => 'Administración',
+            self::PersonalPlanta => 'Planta',
+            self::Acopiador => 'Acopio',
+            self::Proveedor => 'Proveedor',
+            self::Vendedor => 'Ventas',
+            self::Produccion => 'Producción',
+        };
+    }
+
+    /**
+     * Descripción breve del espacio de trabajo del rol.
+     */
+    public function subtituloPanel(): string
+    {
+        return match ($this) {
+            self::Administrador => 'Panel de control',
+            self::PersonalPlanta => 'Centro de operaciones',
+            self::Acopiador => 'Operaciones de campo',
+            self::Proveedor => 'Mis entregas',
+            self::Vendedor => 'Punto de venta',
+            self::Produccion => 'Planta de elaboración',
+        };
+    }
+
+    /**
+     * Ícono (Heroicon) que identifica al rol.
+     */
+    public function iconoPanel(): string
+    {
+        return match ($this) {
+            self::Administrador => 'shield-check',
+            self::PersonalPlanta => 'building-office-2',
+            self::Acopiador => 'truck',
+            self::Proveedor => 'user-group',
+            self::Vendedor => 'shopping-cart',
+            self::Produccion => 'beaker',
+        };
     }
 }

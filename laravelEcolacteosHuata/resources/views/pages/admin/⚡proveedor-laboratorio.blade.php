@@ -26,12 +26,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Laboratorio</flux:heading>
-        <flux:subheading>
-            Calidad de la leche de cada proveedor, individualmente &middot; {{ $desde->format('d/m/Y') }} — {{ $hasta->format('d/m/Y') }}
-        </flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Laboratorio">Calidad de la leche de cada proveedor, individualmente &middot; {{ $desde->format('d/m/Y') }} — {{ $hasta->format('d/m/Y') }}</x-ui.titulo>
 
     @forelse ($proveedores as $proveedor)
         @php $resultados = $resultadosPorProveedor->get($proveedor->id, collect()); @endphp

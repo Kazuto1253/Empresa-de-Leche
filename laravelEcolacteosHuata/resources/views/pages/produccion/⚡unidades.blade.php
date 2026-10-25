@@ -69,10 +69,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Unidades de medida</flux:heading>
-            <flux:subheading>Unidades disponibles para tus insumos y recetas.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Unidades de medida">Unidades disponibles para tus insumos y recetas.</x-ui.titulo>
         <flux:modal.trigger name="unidad-form">
             <flux:button size="sm" variant="primary" icon="plus" wire:click="nuevaUnidad">Nueva unidad</flux:button>
         </flux:modal.trigger>

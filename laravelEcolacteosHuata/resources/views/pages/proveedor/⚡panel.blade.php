@@ -2,8 +2,11 @@
 
 use App\Enums\Rol;
 use App\Models\Acopiador;
+use App\Models\Comunicado;
+use App\Models\PagoProveedor;
 use App\Models\Proveedor;
 use App\Models\Recojo;
+use App\Models\ResultadoLaboratorio;
 use Flux\Flux;
 use Livewire\Component;
 
@@ -29,6 +32,10 @@ new class extends Component
             'entregadoSemana' => Recojo::query()->where('proveedor_id', $proveedor?->id)->whereBetween('fecha', [now()->startOfWeek()->toDateString(), now()->endOfWeek()->toDateString()])->sum('litros'),
             'acopiadores' => Acopiador::with('user')->get()->sortBy(fn (Acopiador $acopiador) => $acopiador->user->nombreCompleto()),
             'entregadoMes' => Recojo::query()->where('proveedor_id', $proveedor?->id)->whereBetween('fecha', [now()->startOfMonth()->toDateString(), now()->endOfMonth()->toDateString()])->sum('litros'),
+            'pagosMes' => (float) PagoProveedor::query()->where('proveedor_id', $proveedor?->id)->whereBetween('fecha', [now()->startOfMonth()->toDateString(), now()->endOfMonth()->toDateString()])->sum('monto'),
+            'ultimasEntregas' => Recojo::query()->where('proveedor_id', $proveedor?->id)->latest('fecha')->latest('id')->limit(5)->get(),
+            'ultimosResultados' => ResultadoLaboratorio::query()->where('proveedor_id', $proveedor?->id)->latest('fecha')->latest('id')->limit(4)->get(),
+            'comunicados' => Comunicado::query()->paraRol(Rol::Proveedor)->latest('fecha')->latest('id')->limit(3)->get(),
         ];
     }
 
@@ -89,77 +96,128 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Panel del proveedor</flux:heading>
-        <flux:subheading>Bienvenido, {{ auth()->user()->nombreCompleto() }}.</flux:subheading>
-    </div>
+<div class="flex flex-col gap-8">
+    <x-ui.page-header
+        titulo="Panel del proveedor"
+        :subtitulo="'Bienvenido, '.auth()->user()->nombreCompleto().'.'"
+        :etiqueta="Rol::Proveedor->etiquetaPanel()"
+    />
 
     @if ($proveedor?->bloqueado)
-        <div class="rounded-xl border border-huata-rojo-500 bg-huata-rojo-50 p-4 text-huata-rojo-700 dark:bg-huata-rojo-500/10">
-            <flux:heading size="sm">Tu leche no está siendo recogida</flux:heading>
-            <flux:text class="text-huata-rojo-700 dark:text-huata-rojo-400">
-                Se detectaron {{ $proveedor->alteraciones }} alteraciones de calidad en tu leche. Comunícate con planta para resolverlo.
-            </flux:text>
+        <div class="hh-panel hh-entra flex gap-3 p-4" role="alert" style="border-color: var(--hh-peligro)">
+            <flux:icon icon="exclamation-triangle" class="mt-0.5 size-5 shrink-0 text-[var(--hh-peligro)]" />
+            <div>
+                <p class="text-sm font-semibold text-[var(--hh-texto)]">Tu leche no está siendo recogida</p>
+                <p class="mt-0.5 text-sm text-[var(--hh-texto-2)]">Se detectaron {{ $proveedor->alteraciones }} alteraciones de calidad en tu leche. Comunícate con planta para resolverlo.</p>
+            </div>
         </div>
     @endif
 
-    <div class="rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
-        <flux:text>Acopiador asignado</flux:text>
-        <p class="mt-1 text-xl font-bold text-huata-verde-700">
-            {{ $proveedor?->acopiador?->user?->nombreCompleto() ?? 'Sin asignar' }}
-        </p>
-        @if ($proveedor?->acopiador)
-            <p class="text-sm text-zinc-500">{{ $proveedor->acopiador->ruta_nombre }}</p>
-        @endif
-    </div>
+    <section aria-label="Tus entregas" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <x-ui.kpi etiqueta="Entregado hoy" :valor="number_format((float) $entregadoHoy, 2).' L'" icono="beaker" :indice="0" />
+        <x-ui.kpi etiqueta="Entregado esta semana" :valor="number_format((float) $entregadoSemana, 2).' L'" icono="calendar-days" :indice="1" />
+        <x-ui.kpi etiqueta="Entregado este mes" :valor="number_format((float) $entregadoMes, 2).' L'" icono="chart-bar" :indice="2" />
+        <x-ui.kpi etiqueta="Pagos recibidos este mes" :valor="'S/ '.number_format($pagosMes, 2)" icono="banknotes" color="#23865b" :indice="3" />
+    </section>
 
-    <div class="rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-                <flux:text>Ubicación de tu finca</flux:text>
-                <p class="mt-1 text-lg font-bold text-huata-verde-700">
-                    {{ $proveedor?->finca_ubicacion ?: 'Sin registrar' }}
-                </p>
-                @if ($proveedor?->finca_referencia)
-                    <p class="text-sm text-zinc-500">{{ $proveedor->finca_referencia }}</p>
-                @endif
+    <div class="grid gap-6 lg:grid-cols-2">
+        <x-ui.panel titulo="Tu acopiador" :indice="4">
+            <div class="flex items-start gap-3">
+                <span class="grid size-11 shrink-0 place-items-center rounded-xl border border-[var(--hh-borde)] text-[var(--hh-marca)]"><flux:icon icon="truck" class="size-5" /></span>
+                <div class="min-w-0">
+                    <p class="text-base font-semibold text-[var(--hh-texto)]">{{ $proveedor?->acopiador?->user?->nombreCompleto() ?? 'Sin asignar' }}</p>
+                    @if ($proveedor?->acopiador)
+                        <p class="text-sm text-[var(--hh-texto-2)]">{{ $proveedor->acopiador->ruta_nombre }}</p>
+                    @else
+                        <p class="text-sm text-[var(--hh-texto-2)]">Elige tu acopiador al editar la ubicación de tu finca.</p>
+                    @endif
+                </div>
             </div>
-            <flux:modal.trigger name="ubicacion-form">
-                <flux:button size="sm" variant="primary" icon="map-pin" wire:click="editarUbicacion">
-                    Editar ubicación
-                </flux:button>
-            </flux:modal.trigger>
-        </div>
+        </x-ui.panel>
+
+        <x-ui.panel titulo="Ubicación de tu finca" :indice="5">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <div class="flex min-w-0 items-start gap-3">
+                    <span class="grid size-11 shrink-0 place-items-center rounded-xl border border-[var(--hh-borde)] text-[var(--hh-marca)]"><flux:icon icon="map-pin" class="size-5" /></span>
+                    <div class="min-w-0">
+                        <p class="text-base font-semibold text-[var(--hh-texto)]">{{ $proveedor?->finca_ubicacion ?: 'Sin registrar' }}</p>
+                        @if ($proveedor?->finca_referencia)
+                            <p class="text-sm text-[var(--hh-texto-2)]">{{ $proveedor->finca_referencia }}</p>
+                        @endif
+                    </div>
+                </div>
+                <flux:modal.trigger name="ubicacion-form">
+                    <flux:button size="sm" variant="primary" icon="map-pin" wire:click="editarUbicacion">Editar ubicación</flux:button>
+                </flux:modal.trigger>
+            </div>
+        </x-ui.panel>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-3">
-        <div class="animate-huata-in rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
-            <flux:text>Entregado hoy</flux:text>
-            <p class="mt-1 text-3xl font-bold text-huata-verde-700">{{ number_format((float) $entregadoHoy, 2) }} L</p>
-        </div>
-        <div class="animate-huata-in-delay-1 rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
-            <flux:text>Entregado esta semana</flux:text>
-            <p class="mt-1 text-3xl font-bold text-huata-verde-700">{{ number_format((float) $entregadoSemana, 2) }} L</p>
-        </div>
-        <div class="animate-huata-in-delay-2 rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
-            <flux:text>Entregado este mes</flux:text>
-            <p class="mt-1 text-3xl font-bold text-huata-verde-700">{{ number_format((float) $entregadoMes, 2) }} L</p>
-        </div>
+    <div class="grid gap-6 xl:grid-cols-2">
+        <x-ui.panel titulo="Mis últimas entregas" descripcion="Leche que recogieron de tu finca." :indice="6">
+            @if ($ultimasEntregas->isEmpty())
+                <x-ui.vacio titulo="Aún no hay entregas" descripcion="Cuando recojan tu leche, el detalle aparecerá aquí." icono="truck" />
+            @else
+                <ul class="flex flex-col divide-y divide-[var(--hh-borde)]">
+                    @foreach ($ultimasEntregas as $entrega)
+                        <li class="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-semibold text-[var(--hh-texto)]">{{ $entrega->fecha->format('d/m/Y') }}</p>
+                                <p class="text-xs text-[var(--hh-texto-2)]">{{ $entrega->entregado ? 'Llegó a planta' : 'En camino a planta' }}</p>
+                            </div>
+                            <span class="text-sm font-semibold tabular-nums text-[var(--hh-texto)]">{{ number_format((float) $entrega->litros, 2) }} L</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-ui.panel>
+
+        <x-ui.panel titulo="Resultados de laboratorio" descripcion="La calidad de tu leche." :indice="7">
+            @if ($ultimosResultados->isEmpty())
+                <x-ui.vacio titulo="Sin resultados todavía" descripcion="Los análisis de tu leche aparecerán aquí." icono="beaker" />
+            @else
+                <ul class="flex flex-col divide-y divide-[var(--hh-borde)]">
+                    @foreach ($ultimosResultados as $resultado)
+                        <li class="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-semibold text-[var(--hh-texto)]">{{ $resultado->fecha->format('d/m/Y') }}</p>
+                            </div>
+                            <flux:badge :color="$resultado->conforme ? 'green' : 'red'" size="sm">{{ $resultado->conforme ? 'Conforme' : 'No conforme' }}</flux:badge>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-ui.panel>
     </div>
 
-    <div>
-        <flux:heading size="lg" class="mb-3">Accesos rápidos</flux:heading>
+    @if ($comunicados->isNotEmpty())
+        <x-ui.panel titulo="Comunicados" :indice="8">
+            <ul class="flex flex-col divide-y divide-[var(--hh-borde)]">
+                @foreach ($comunicados as $comunicado)
+                    <li class="py-3 first:pt-0 last:pb-0">
+                        <p class="text-sm font-semibold text-[var(--hh-texto)]">{{ $comunicado->titulo }}</p>
+                        <p class="text-xs text-[var(--hh-texto-2)]">{{ $comunicado->fecha->format('d/m/Y') }}</p>
+                    </li>
+                @endforeach
+            </ul>
+        </x-ui.panel>
+    @endif
+
+    <section aria-labelledby="accesos-titulo">
+        <h2 id="accesos-titulo" class="hh-entra mb-4 text-lg font-semibold tracking-tight text-[var(--hh-texto)]" style="--i: 9">Accesos rápidos</h2>
+        @php
+            $accesos = [
+                ['proveedor.entregas', 'Mis entregas', 'Historial de la leche que entregaste.', 'truck'],
+                ['proveedor.laboratorio', 'Laboratorio', 'Resultados de calidad de tu leche.', 'beaker'],
+                ['proveedor.comunicados', 'Comunicados', 'Avisos y asesoramiento de la planta.', 'megaphone'],
+            ];
+        @endphp
         <div class="grid gap-3 sm:grid-cols-3">
-            @foreach (auth()->user()->navegacionDeRol(Rol::Proveedor) as $item)
-                @if ($item['route'] !== 'proveedor.panel')
-                    <flux:button as="a" :href="route($item['route'])" wire:navigate variant="subtle" :icon="$item['icon']" class="justify-start">
-                        {{ $item['label'] }}
-                    </flux:button>
-                @endif
+            @foreach ($accesos as [$ruta, $titulo, $descripcion, $icono])
+                <x-ui.accion :href="route($ruta)" :titulo="$titulo" :descripcion="$descripcion" :icono="$icono" :indice="10 + $loop->index" />
             @endforeach
         </div>
-    </div>
+    </section>
 
     <flux:modal name="ubicacion-form" class="md:w-[28rem]">
         <form wire:submit="guardarUbicacion" class="flex flex-col gap-4">

@@ -91,10 +91,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Descuentos</flux:heading>
-            <flux:subheading>Descuentos que el vendedor puede activar en el punto de venta.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Descuentos">Descuentos que el vendedor puede activar en el punto de venta.</x-ui.titulo>
 
         <flux:modal.trigger name="descuento-form">
             <flux:button variant="primary" icon="plus" wire:click="nuevo">Nuevo descuento</flux:button>

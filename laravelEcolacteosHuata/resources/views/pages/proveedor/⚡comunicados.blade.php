@@ -24,10 +24,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Comunicados y asesoramiento</flux:heading>
-        <flux:subheading>Avisos publicados por la planta.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Comunicados y asesoramiento">Avisos publicados por la planta.</x-ui.titulo>
 
     <flux:select label="Filtrar por tipo" wire:model.live="filtroTipo" class="max-w-xs">
         <flux:select.option value="">Todos</flux:select.option>

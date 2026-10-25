@@ -41,10 +41,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Empresa</flux:heading>
-        <flux:subheading>Datos que aparecen en boletas y reportes.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Empresa">Datos que aparecen en boletas y reportes.</x-ui.titulo>
 
     <form wire:submit="guardar" class="flex max-w-lg flex-col gap-4 rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
         <flux:input label="Razón social" wire:model="razon_social" />

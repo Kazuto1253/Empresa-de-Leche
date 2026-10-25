@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
     'fecha', 'nombre', 'imagen', 'receta_id', 'cantidad_producida', 'cantidad_vendida', 'lote', 'turno_id', 'responsable_id', 'estado',
@@ -27,7 +26,33 @@ class Produccion extends Model
      */
     public function imagenUrl(): ?string
     {
-        return $this->imagen ? Storage::disk('public')->url($this->imagen) : null;
+        // Relativa al sitio actual (no a APP_URL), para que la foto cargue desde cualquier dirección.
+        return $this->imagen ? asset('storage/'.ltrim($this->imagen, '/')) : null;
+    }
+
+    /**
+     * Productos publicados con stock, de la producción más reciente a la más antigua, para la
+     * página pública. El precio es el mismo precio de venta por unidad que usa el módulo de ventas.
+     *
+     * @return Collection<int, array{id: int, nombre: string, precio: float, imagen: ?string, disponible: float}>
+     */
+    public static function catalogoPublico(): Collection
+    {
+        return static::query()
+            ->with('receta.detalles.insumo')
+            ->where('estado', EstadoProduccion::Completada)
+            ->orderByDesc('fecha')
+            ->orderByDesc('id')
+            ->get()
+            ->filter(fn (self $produccion) => $produccion->receta !== null && $produccion->cantidadDisponible() > 0)
+            ->map(fn (self $produccion) => [
+                'id' => $produccion->id,
+                'nombre' => $produccion->nombre ?? $produccion->receta->nombre,
+                'precio' => $produccion->receta->precioVenta(),
+                'imagen' => $produccion->imagenUrl(),
+                'disponible' => $produccion->cantidadDisponible(),
+            ])
+            ->values();
     }
 
     /**

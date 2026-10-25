@@ -27,7 +27,12 @@ test('el sidebar del administrador solo muestra sus propios módulos, sin los de
     $secciones = Rol::Administrador->navegacionAgrupada();
 
     expect($secciones)->not->toBeNull()
-        ->and(array_keys($secciones))->toEqual(['Administrador del sistema']);
+        ->and(array_keys($secciones))->toEqual(['General', 'Gestión', 'Operaciones', 'Configuración']);
+
+    // Agrupar el menú no debe quitar ningún acceso del administrador.
+    $enSecciones = collect($secciones)->flatten(1)->pluck('route')->sort()->values()->all();
+    $propios = collect(Rol::Administrador->navegacion())->pluck('route')->sort()->values()->all();
+    expect($enSecciones)->toEqual($propios);
 
     foreach ($secciones as $items) {
         foreach ($items as $item) {

@@ -87,10 +87,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Inventario</flux:heading>
-            <flux:subheading>Stock disponible de insumos para producción, con los más urgentes de reponer primero.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Inventario">Stock disponible de insumos para producción, con los más urgentes de reponer primero.</x-ui.titulo>
         <flux:button size="sm" variant="ghost" icon="credit-card" :href="route('produccion.compras')" wire:navigate>
             Historial de compras
         </flux:button>

@@ -15,4 +15,5 @@ Route::prefix('{current_team}/vendedor')
         Route::livewire('historial', 'pages::vendedor.historial')->name('historial');
         Route::livewire('inventario', 'pages::vendedor.inventario')->name('inventario');
         Route::livewire('clientes', 'pages::vendedor.clientes')->name('clientes');
+        Route::livewire('pedidos-web', 'pages::vendedor.pedidos-web')->name('pedidos-web');
     });

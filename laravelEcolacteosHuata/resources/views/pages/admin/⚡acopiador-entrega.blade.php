@@ -25,10 +25,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Entrega a planta</flux:heading>
-            <flux:subheading>Cierre diario de cada acopiador, individualmente.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Entrega a planta">Cierre diario de cada acopiador, individualmente.</x-ui.titulo>
         <flux:input type="date" wire:model.live="fecha" class="max-w-xs" />
     </div>
 

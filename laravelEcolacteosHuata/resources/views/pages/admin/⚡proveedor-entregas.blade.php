@@ -26,12 +26,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Entregas de proveedores</flux:heading>
-        <flux:subheading>
-            Historial de cada proveedor, individualmente &middot; {{ $desde->format('d/m/Y') }} — {{ $hasta->format('d/m/Y') }}
-        </flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Entregas de proveedores">Historial de cada proveedor, individualmente &middot; {{ $desde->format('d/m/Y') }} — {{ $hasta->format('d/m/Y') }}</x-ui.titulo>
 
     @forelse ($proveedores as $proveedor)
         @php $recojos = $recojosPorProveedor->get($proveedor->id, collect()); @endphp

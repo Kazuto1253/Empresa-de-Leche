@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #12432c; }
-        .membrete { margin-bottom: 16px; border-bottom: 2px solid #1a8049; padding-bottom: 10px; }
-        .membrete h1 { font-size: 16px; margin: 0 0 4px; color: #12432c; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #061b3f; }
+        .membrete { margin-bottom: 16px; border-bottom: 2px solid #0b4fa3; padding-bottom: 10px; }
+        .membrete h1 { font-size: 16px; margin: 0 0 4px; color: #061b3f; }
         .membrete p { margin: 0; font-size: 10px; color: #444; }
-        h2.titulo { font-size: 13px; margin: 0 0 12px; color: #17663d; }
+        h2.titulo { font-size: 13px; margin: 0 0 12px; color: #083b7d; }
         table.datos { width: 100%; border-collapse: collapse; }
-        table.datos th { background: #1a8049; color: #fff; text-align: left; padding: 6px 8px; font-size: 10px; }
-        table.datos td { padding: 5px 8px; border-bottom: 1px solid #d6f4de; font-size: 10px; }
-        table.datos tr:nth-child(even) td { background: #eefbf2; }
+        table.datos th { background: #0b4fa3; color: #fff; text-align: left; padding: 6px 8px; font-size: 10px; }
+        table.datos td { padding: 5px 8px; border-bottom: 1px solid #dce8fb; font-size: 10px; }
+        table.datos tr:nth-child(even) td { background: #eef4fd; }
         .total { margin-top: 12px; font-size: 12px; font-weight: bold; text-align: right; }
         .pie { margin-top: 24px; font-size: 9px; color: #888; text-align: center; }
     </style>

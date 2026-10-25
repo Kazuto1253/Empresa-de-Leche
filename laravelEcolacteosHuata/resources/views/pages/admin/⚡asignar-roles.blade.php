@@ -119,10 +119,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Asignar rol a usuarios</flux:heading>
-        <flux:subheading>Un usuario puede tener uno o varios roles a la vez.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Asignar rol a usuarios">Un usuario puede tener uno o varios roles a la vez.</x-ui.titulo>
 
     <flux:input
         wire:model.live.debounce.300ms="busqueda"

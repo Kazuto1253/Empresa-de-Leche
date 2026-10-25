@@ -616,12 +616,9 @@ new class extends Component
 
     {{-- Encabezado y pestañas --}}
     <div class="flex flex-col gap-4">
-        <div>
-            <flux:heading size="lg">Tomar asistencia</flux:heading>
-            <flux:subheading>{{ $pestanas[$pestana]['ayuda'] ?? $pestanas['asistencia']['ayuda'] }}</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Tomar asistencia">{{ $pestanas[$pestana]['ayuda'] ?? $pestanas['asistencia']['ayuda'] }}</x-ui.titulo>
 
-        <div class="grid grid-cols-3 gap-1 rounded-xl bg-white/70 p-1 sm:inline-flex sm:w-fit dark:bg-zinc-800/70">
+        <div class="hh-panel grid grid-cols-3 gap-1 p-1 sm:inline-flex sm:w-fit">
             @foreach ($pestanas as $clave => $datos)
                 <button
                     type="button"

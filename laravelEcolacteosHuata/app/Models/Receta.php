@@ -8,11 +8,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['nombre'])]
+#[Fillable(['nombre', 'precio_venta'])]
 class Receta extends Model
 {
     /** @use HasFactory<RecetaFactory> */
     use HasFactory;
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'precio_venta' => 'decimal:2',
+        ];
+    }
 
     /**
      * @return HasMany<RecetaDetalle, $this>
@@ -28,6 +38,17 @@ class Receta extends Model
     public function producciones(): HasMany
     {
         return $this->hasMany(Produccion::class);
+    }
+
+    /**
+     * Precio de venta por unidad: el que fijó producción o, si todavía no hay uno, el costo
+     * total de la receta (el comportamiento anterior).
+     */
+    public function precioVenta(): float
+    {
+        $precio = (float) $this->precio_venta;
+
+        return $precio > 0 ? $precio : $this->costoTotal();
     }
 
     /**

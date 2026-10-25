@@ -1,13 +1,13 @@
 @props(['showTeam' => true])
 
 <flux:dropdown position="bottom" align="end">
-    <button type="button" class="group flex items-center gap-2 rounded-lg p-1 hover:bg-zinc-800/5 dark:hover:bg-white/10" data-test="user-menu-button">
-        <flux:avatar :name="auth()->user()->nombreCompleto()" size="sm" />
+    <button type="button" class="group flex items-center gap-2.5 rounded-xl p-1 pe-2 transition-colors hover:bg-[var(--hh-superficie-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hh-marca)]" data-test="user-menu-button">
+        <flux:avatar :name="auth()->user()->nombreCompleto()" size="sm" color="auto" :color:seed="auth()->id()" class="ring-2 ring-[var(--hh-marca-suave)]" />
         <div class="hidden text-start text-sm leading-tight sm:grid">
-            <span class="truncate font-medium text-zinc-600 group-hover:text-zinc-900 dark:text-white/80 dark:group-hover:text-white">{{ auth()->user()->nombreCompleto() }}</span>
-            <span class="truncate text-xs text-zinc-400 dark:text-zinc-500">{{ auth()->user()->rol?->label() }}</span>
+            <span class="max-w-40 truncate font-semibold text-[var(--hh-texto)]">{{ auth()->user()->nombreCompleto() }}</span>
+            <span class="truncate text-xs text-[var(--hh-texto-2)]">{{ auth()->user()->rol?->label() }}</span>
         </div>
-        <flux:icon name="chevron-down" variant="micro" class="hidden size-4 text-zinc-400 sm:block" />
+        <flux:icon name="chevron-down" variant="micro" class="hidden size-4 text-[var(--hh-texto-2)] transition-transform group-aria-expanded:rotate-180 sm:block" />
     </button>
 
     <flux:menu>

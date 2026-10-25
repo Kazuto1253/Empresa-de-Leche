@@ -1,11 +1,25 @@
 <?php
 
+use App\Http\Controllers\PedidoWebBoletaController;
+use App\Http\Controllers\PedidoWebController;
 use App\Http\Middleware\EnsureTeamMembership;
 use App\Models\Empresa;
+use App\Models\Produccion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome', ['empresa' => Empresa::actual()]))->name('home');
+Route::get('/', function () {
+    $empresa = Empresa::actual();
+
+    return view('welcome', [
+        'empresa' => $empresa,
+        'productos' => Produccion::catalogoPublico(),
+        'whatsapp' => $empresa->whatsapp(),
+    ]);
+})->name('home');
+
+Route::post('/pedidos', [PedidoWebController::class, 'store'])->middleware('throttle:8,1')->name('pedidos-web.store');
+Route::get('/pedido/{token}/boleta', PedidoWebBoletaController::class)->middleware('throttle:30,1')->name('pedidos-web.boleta');
 
 Route::prefix('{current_team}')
     ->middleware(['auth', EnsureTeamMembership::class])

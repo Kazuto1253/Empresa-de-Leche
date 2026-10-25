@@ -115,9 +115,9 @@ new class extends Component
         $this->carrito[] = [
             'produccion_id' => $produccion->id,
             'nombre' => $nombre,
-            'precio_unitario' => $produccion->receta->costoTotal(),
+            'precio_unitario' => $produccion->receta->precioVenta(),
             'cantidad' => 1,
-            'subtotal' => round($produccion->receta->costoTotal(), 2),
+            'subtotal' => round($produccion->receta->precioVenta(), 2),
         ];
     }
 
@@ -267,10 +267,7 @@ new class extends Component
 <div class="flex flex-col gap-6 lg:flex-row">
     <div class="flex flex-1 flex-col gap-6">
         <div class="flex items-center gap-3">
-            <div>
-                <flux:heading size="xl">Punto de venta</flux:heading>
-                <flux:subheading>Selecciona productos para agregarlos a la venta actual.</flux:subheading>
-            </div>
+            <x-ui.titulo titulo="Punto de venta">Selecciona productos para agregarlos a la venta actual.</x-ui.titulo>
             <flux:badge color="green">{{ count($carrito) }} producto(s)</flux:badge>
         </div>
 
@@ -328,37 +325,37 @@ new class extends Component
             />
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             @forelse ($producciones as $produccion)
-                @php $disponible = $produccion->cantidadDisponible(); $cantidad = $disponible; $precioUnidad = $produccion->receta->costoTotal(); @endphp
-                <div wire:key="producto-{{ $produccion->id }}" class="flex flex-col rounded-xl border border-huata-verde-100 p-4 dark:border-zinc-700 huata-cuadro">
-                    <div class="mb-3 flex h-24 items-center justify-center overflow-hidden rounded-lg bg-huata-verde-50 dark:bg-huata-verde-950/30">
+                @php $disponible = $produccion->cantidadDisponible(); $cantidad = $disponible; $precioUnidad = $produccion->receta->precioVenta(); @endphp
+                <div wire:key="producto-{{ $produccion->id }}" class="hh-accion !flex-col !gap-0 !p-3">
+                    <div class="mb-3 flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-lg bg-[var(--hh-superficie-2)]">
                         @if ($produccion->imagenUrl())
                             <img src="{{ $produccion->imagenUrl() }}" alt="{{ $produccion->nombre }}" class="size-full object-cover" />
                         @else
-                            <flux:icon name="cube" class="size-10 text-huata-verde-400" />
+                            <flux:icon name="cube" class="size-10 text-[var(--hh-marca)] opacity-50" />
                         @endif
                     </div>
 
-                    <div class="flex items-start justify-between gap-2">
-                        <flux:heading size="sm">{{ $produccion->nombre ?? $produccion->receta->nombre }}</flux:heading>
-                        <flux:badge :color="$cantidad > 5 ? 'green' : ($cantidad > 0 ? 'amber' : 'red')" size="sm">
+                    <div class="flex w-full items-start justify-between gap-2">
+                        <p class="text-sm font-semibold leading-snug text-[var(--hh-texto)]">{{ $produccion->nombre ?? $produccion->receta->nombre }}</p>
+                        <flux:badge :color="$cantidad > 5 ? 'green' : ($cantidad > 0 ? 'amber' : 'red')" size="sm" class="shrink-0">
                             {{ number_format($cantidad, 0) }}
                         </flux:badge>
                     </div>
 
-                    <div class="mt-3 flex items-center justify-between">
-                        <span class="text-lg font-bold text-huata-verde-700">S/ {{ number_format($precioUnidad, 2) }}</span>
-                        <flux:button
-                            size="sm"
-                            variant="primary"
-                            icon="plus"
-                            wire:click="agregar({{ $produccion->id }})"
-                            :disabled="$disponible <= 0"
-                        >
-                            Agregar
-                        </flux:button>
-                    </div>
+                    <p class="mt-2 w-full text-xl font-semibold tabular-nums text-[var(--hh-texto)]">S/ {{ number_format($precioUnidad, 2) }}</p>
+
+                    <flux:button
+                        size="sm"
+                        variant="primary"
+                        icon="plus"
+                        class="mt-3 w-full"
+                        wire:click="agregar({{ $produccion->id }})"
+                        :disabled="$disponible <= 0"
+                    >
+                        Agregar
+                    </flux:button>
                 </div>
             @empty
                 <div class="col-span-full rounded-xl border border-huata-verde-100 p-6 text-center text-zinc-500 dark:border-zinc-700 huata-cuadro">
@@ -417,16 +414,21 @@ new class extends Component
                     <span>- S/ {{ number_format($descuento, 2) }}</span>
                 </div>
             @endif
-            <div class="flex justify-between border-t border-huata-verde-100 pt-2 text-lg font-bold dark:border-zinc-700">
-                <span>Total</span>
-                <span>S/ {{ number_format($total, 2) }}</span>
+            <div class="flex items-end justify-between border-t border-[var(--hh-borde)] pt-3">
+                <span class="text-sm font-semibold text-[var(--hh-texto-2)]">Total</span>
+                <span class="text-3xl font-semibold tabular-nums tracking-tight text-[var(--hh-texto)]">S/ {{ number_format($total, 2) }}</span>
             </div>
 
-            <flux:select label="Método de pago" wire:model.live="metodoPago">
-                @foreach ($metodos as $m)
-                    <flux:select.option value="{{ $m['value'] }}">{{ $m['label'] }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            <fieldset>
+                <legend class="mb-2 text-sm font-semibold text-[var(--hh-texto)]">Método de pago</legend>
+                <div class="grid grid-cols-3 gap-2">
+                    @foreach ($metodos as $m)
+                        <label class="flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-[var(--hh-borde-fuerte)] px-2 text-center text-sm font-semibold text-[var(--hh-texto)] transition-colors hover:border-[var(--hh-marca)] has-[:checked]:border-[var(--hh-marca)] has-[:checked]:bg-[var(--hh-marca)] has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--hh-marca)]">
+                            <input type="radio" class="sr-only" name="metodo-pago" value="{{ $m['value'] }}" wire:model.live="metodoPago">{{ $m['label'] }}
+                        </label>
+                    @endforeach
+                </div>
+            </fieldset>
 
             @if ($metodoPago === 'efectivo')
                 <flux:input type="number" step="0.01" min="0" label="Efectivo recibido" wire:model.live="efectivoRecibido" />
@@ -438,7 +440,7 @@ new class extends Component
                 @endif
             @endif
 
-            <flux:button variant="primary" icon="check" wire:click="guardar">Cobrar y guardar boleta</flux:button>
+            <flux:button variant="primary" icon="check" wire:click="guardar" class="!min-h-12 !text-base">Cobrar y guardar boleta</flux:button>
 
             @if ($ventaGuardadaId)
                 <flux:button as="a" :href="route('vendedor.ventas.boleta', $ventaGuardadaId)" target="_blank" variant="filled" icon="document-arrow-down">

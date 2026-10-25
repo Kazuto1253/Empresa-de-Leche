@@ -8,13 +8,21 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/landing.css',
+                'resources/js/intro3d.js',
+                'resources/js/hero3d.js',
+                'resources/js/interacciones.js',
+                'resources/js/productos3d.js',
                 'resources/js/app.js',
                 'resources/js/passkeys.js',
             ],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
+                bunny('Figtree', {
+                    weights: [400, 500, 600, 700],
+                }),
+                bunny('Bricolage Grotesque', {
+                    weights: [600, 700, 800],
                 }),
             ],
         }),

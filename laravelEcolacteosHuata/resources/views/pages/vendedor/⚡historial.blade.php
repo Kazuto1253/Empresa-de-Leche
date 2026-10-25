@@ -99,10 +99,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-            <flux:heading size="xl">Historial de ventas</flux:heading>
-            <flux:subheading>Consulta las boletas emitidas y descarga su PDF.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Historial de ventas">Consulta las boletas emitidas y descarga su PDF.</x-ui.titulo>
 
         <flux:modal.trigger name="confirmar-limpiar-historial">
             <flux:button size="sm" variant="ghost" icon="trash" :disabled="$boletasPeriodo === 0">

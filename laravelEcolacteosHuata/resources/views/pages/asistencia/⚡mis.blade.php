@@ -197,10 +197,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <flux:heading size="xl">Asistencia</flux:heading>
-            <flux:subheading>Revisa tus asistencias y justifica tus faltas o tardanzas dentro de una semana.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Asistencia">Revisa tus asistencias y justifica tus faltas o tardanzas dentro de una semana.</x-ui.titulo>
 
         <div class="flex items-center gap-2 rounded-xl bg-white/70 p-1 dark:bg-zinc-800/70">
             <flux:button size="sm" variant="ghost" icon="chevron-left" wire:click="cambiarMes(-1)" aria-label="Mes anterior" />

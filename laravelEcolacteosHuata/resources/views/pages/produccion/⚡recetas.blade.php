@@ -13,6 +13,8 @@ new class extends Component
 
     public string $recetaNombre = '';
 
+    public string $recetaPrecioVenta = '';
+
     public array $recetaDetalles = [];
 
     public ?int $eliminarRecetaId = null;
@@ -27,7 +29,7 @@ new class extends Component
 
     public function nuevaReceta(): void
     {
-        $this->reset(['recetaId', 'recetaNombre']);
+        $this->reset(['recetaId', 'recetaNombre', 'recetaPrecioVenta']);
         $this->recetaDetalles = [];
         Flux::modal('receta-form')->show();
     }
@@ -37,6 +39,7 @@ new class extends Component
         $r = Receta::with('detalles')->findOrFail($id);
         $this->recetaId = $r->id;
         $this->recetaNombre = $r->nombre;
+        $this->recetaPrecioVenta = $r->precio_venta !== null ? (string) $r->precio_venta : '';
         $this->recetaDetalles = $r->detalles->map(fn (RecetaDetalle $d) => [
             'insumo_id' => $d->insumo_id,
             'cantidad' => (string) $d->cantidad,
@@ -59,6 +62,7 @@ new class extends Component
     {
         $data = $this->validate([
             'recetaNombre' => 'required|string|max:255',
+            'recetaPrecioVenta' => 'nullable|numeric|min:0|max:99999999',
         ]);
 
         if (collect($this->recetaDetalles)->filter(fn (array $l) => ! empty($l['insumo_id']) && $l['cantidad'] !== '')->isEmpty()) {
@@ -69,6 +73,7 @@ new class extends Component
 
         $receta = Receta::updateOrCreate(['id' => $this->recetaId], [
             'nombre' => $data['recetaNombre'],
+            'precio_venta' => $data['recetaPrecioVenta'] === null || $data['recetaPrecioVenta'] === '' ? null : $data['recetaPrecioVenta'],
         ]);
 
         $receta->detalles()->delete();
@@ -107,10 +112,7 @@ new class extends Component
 
 <div class="flex flex-col gap-10">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Recetas</flux:heading>
-            <flux:subheading>Arma cada receta con sus insumos y mira cuánto cuesta producirla.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Recetas">Arma cada receta con sus insumos y mira cuánto cuesta producirla.</x-ui.titulo>
         <flux:modal.trigger name="receta-form">
             <flux:button size="sm" variant="primary" icon="plus" wire:click="nuevaReceta">Nueva receta</flux:button>
         </flux:modal.trigger>
@@ -167,6 +169,13 @@ new class extends Component
                             <span>Costo total receta</span>
                             <span class="font-semibold">S/ {{ number_format($receta->costoTotal(), 2) }}</span>
                         </div>
+                        <div class="flex justify-between">
+                            <span>Precio de venta (por unidad)</span>
+                            <span class="font-semibold">S/ {{ number_format($receta->precioVenta(), 2) }}</span>
+                        </div>
+                        @if ((float) $receta->precio_venta <= 0)
+                            <p class="text-xs text-zinc-500">Sin precio propio: se vende al costo. Edita la receta para fijarlo.</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -182,6 +191,8 @@ new class extends Component
             <flux:heading size="lg">{{ $recetaId ? 'Editar receta' : 'Nueva receta' }}</flux:heading>
 
             <flux:input label="Nombre de la receta" wire:model="recetaNombre" placeholder="Queso fresco artesanal" />
+
+            <flux:input label="Precio de venta por unidad (S/)" type="number" step="0.01" min="0" wire:model="recetaPrecioVenta" placeholder="Vacío = se vende al costo" />
 
             <div>
                 <div class="mb-2 flex items-center justify-between">

@@ -137,10 +137,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Compras de insumos</flux:heading>
-        <flux:subheading>Historial de ingresos de stock: cuándo, cuánto y a qué precio, para comparar precios entre compras.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Compras de insumos">Historial de ingresos de stock: cuándo, cuánto y a qué precio, para comparar precios entre compras.</x-ui.titulo>
 
     <div class="flex flex-wrap gap-2">
         <flux:button size="sm" variant="ghost" wire:click="filtrarHoy">Hoy</flux:button>

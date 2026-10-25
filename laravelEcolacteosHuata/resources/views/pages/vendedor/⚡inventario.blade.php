@@ -23,7 +23,7 @@ new class extends Component
         $filas = $producciones->map(fn (Produccion $p) => [
             'id' => $p->id,
             'nombre' => $p->nombre ?? $p->receta->nombre,
-            'precioUnidad' => $p->receta->costoTotal(),
+            'precioUnidad' => $p->receta->precioVenta(),
             'disponible' => $p->cantidadDisponible(),
         ]);
 
@@ -38,10 +38,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Inventario</flux:heading>
-        <flux:subheading>Cantidad disponible de lo producido, lista para la venta.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Inventario">Cantidad disponible de lo producido, lista para la venta.</x-ui.titulo>
 
     <div class="grid gap-4 sm:grid-cols-3">
         <div class="rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">

@@ -290,10 +290,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-8">
-    <div>
-        <flux:heading size="xl">Laboratorio</flux:heading>
-        <flux:subheading>Registra resultados de calidad de leche por proveedor.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Laboratorio">Registra resultados de calidad de leche por proveedor.</x-ui.titulo>
 
     <div>
         <div class="mb-3 flex flex-wrap items-center justify-between gap-3">

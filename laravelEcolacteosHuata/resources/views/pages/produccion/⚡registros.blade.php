@@ -390,10 +390,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Producción</flux:heading>
-            <flux:subheading>Registra cada lote que preparas y descuenta automáticamente los insumos usados.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Producción">Registra cada lote que preparas y descuenta automáticamente los insumos usados.</x-ui.titulo>
         <flux:modal.trigger name="produccion-form">
             <flux:button size="sm" variant="primary" icon="plus" wire:click="nuevaProduccion">Nueva producción</flux:button>
         </flux:modal.trigger>
@@ -415,7 +412,7 @@ new class extends Component
             </flux:table.columns>
             <flux:table.rows>
                 @forelse ($producciones as $produccion)
-                    @php $precioUnidad = $produccion->receta->costoTotal(); $disponible = $produccion->cantidadDisponible(); @endphp
+                    @php $precioUnidad = $produccion->receta->precioVenta(); $disponible = $produccion->cantidadDisponible(); @endphp
                     <flux:table.row wire:key="prod-{{ $produccion->id }}">
                         <flux:table.cell>{{ $produccion->fecha->format('d/m/Y') }}</flux:table.cell>
                         <flux:table.cell>{{ $produccion->turno?->nombre ?? '—' }}</flux:table.cell>

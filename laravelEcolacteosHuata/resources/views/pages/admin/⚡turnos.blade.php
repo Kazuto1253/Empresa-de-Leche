@@ -137,10 +137,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Turnos de rutas y turnos de producción</flux:heading>
-        <flux:subheading>Horarios que usan los acopiadores en sus rutas y los que puede elegir Producción para cada lote.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Turnos de rutas y turnos de producción">Horarios que usan los acopiadores en sus rutas y los que puede elegir Producción para cada lote.</x-ui.titulo>
 
     <div class="grid gap-6 lg:grid-cols-2">
         <div class="rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">

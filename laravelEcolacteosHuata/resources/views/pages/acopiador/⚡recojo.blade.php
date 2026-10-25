@@ -147,10 +147,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Recojo de ruta</flux:heading>
-        <flux:subheading>{{ $acopiador?->ruta_nombre ?? 'Sin ruta asignada' }}</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Recojo de ruta">{{ $acopiador?->ruta_nombre ?? 'Sin ruta asignada' }}</x-ui.titulo>
 
     <div class="overflow-x-auto rounded-xl border border-huata-verde-100 px-3 dark:border-zinc-700 huata-cuadro">
         <flux:table>

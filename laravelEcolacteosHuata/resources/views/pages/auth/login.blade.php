@@ -41,7 +41,7 @@
 
             <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
+            <flux:button variant="primary" type="submit" class="w-full !min-h-12 !text-base" data-test="login-button">
                 Iniciar sesión
             </flux:button>
         </form>

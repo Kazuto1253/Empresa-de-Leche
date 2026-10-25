@@ -525,10 +525,7 @@ new class extends Component
 
 <div class="flex flex-col gap-8">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Rutas</flux:heading>
-            <flux:subheading>Acopiadores con sus proveedores asignados y si ya recogieron hoy.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Rutas">Acopiadores con sus proveedores asignados y si ya recogieron hoy.</x-ui.titulo>
         <flux:modal.trigger name="ruta-form">
             <flux:button size="sm" variant="primary" icon="plus" wire:click="nuevaRuta">Nueva ruta</flux:button>
         </flux:modal.trigger>

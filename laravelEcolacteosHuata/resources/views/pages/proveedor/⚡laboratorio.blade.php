@@ -36,10 +36,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Resultados de laboratorio</flux:heading>
-        <flux:subheading>Calidad de la leche que has entregado.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Resultados de laboratorio">Calidad de la leche que has entregado.</x-ui.titulo>
 
     <div class="flex flex-wrap items-end gap-4">
         <flux:select label="Período" wire:model.live="periodo" class="max-w-xs">

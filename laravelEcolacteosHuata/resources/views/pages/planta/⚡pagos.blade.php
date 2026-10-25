@@ -118,10 +118,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Pago a proveedores</flux:heading>
-        <flux:subheading>Revisa quiénes están pagados y quiénes faltan por período.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Pago a proveedores">Revisa quiénes están pagados y quiénes faltan por período.</x-ui.titulo>
 
     <div class="flex flex-wrap items-end gap-3 rounded-xl border border-huata-verde-100 p-4 dark:border-zinc-700 huata-cuadro">
         <flux:select label="Período" wire:model.live="periodo" class="max-w-xs">

@@ -75,10 +75,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <flux:heading size="xl">Mapa de recojo</flux:heading>
-            <flux:subheading>Sigue el camino designado por planta y recoge la leche en cada parada.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Mapa de recojo">Sigue el camino designado por planta y recoge la leche en cada parada.</x-ui.titulo>
         @if ($rutas->count() > 1)
             <div class="w-full sm:w-72">
                 <flux:select wire:model.live="rutaId" label="Ruta">

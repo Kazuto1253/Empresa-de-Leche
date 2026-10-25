@@ -59,10 +59,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Productos</flux:heading>
-            <flux:subheading>Lo que ya se terminó de producir, listo para vender.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Productos">Lo que ya se terminó de producir, listo para vender.</x-ui.titulo>
         <flux:input
             wire:model.live.debounce.300ms="busqueda"
             icon="magnifying-glass"
@@ -82,7 +79,7 @@ new class extends Component
             </flux:table.columns>
             <flux:table.rows>
                 @forelse ($producciones as $produccion)
-                    @php $precioUnidad = $produccion->receta->costoTotal(); $cantidad = $produccion->cantidadDisponible(); @endphp
+                    @php $precioUnidad = $produccion->receta->precioVenta(); $cantidad = $produccion->cantidadDisponible(); @endphp
                     <flux:table.row wire:key="prod-{{ $produccion->id }}">
                         <flux:table.cell class="font-medium">
                             <div class="flex items-center gap-2">

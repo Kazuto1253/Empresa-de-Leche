@@ -90,10 +90,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-6">
-    <div>
-        <flux:heading size="xl">Comunicados y asesoramiento</flux:heading>
-        <flux:subheading>Publica avisos y consejos visibles para todos los proveedores.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Comunicados y asesoramiento">Publica avisos y consejos visibles para todos los proveedores.</x-ui.titulo>
 
     <form wire:submit="publicar" class="flex flex-col gap-4 rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
         <flux:select label="Tipo" wire:model="tipo">

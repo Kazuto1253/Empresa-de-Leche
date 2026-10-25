@@ -101,10 +101,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Clientes</flux:heading>
-            <flux:subheading>Clientes que compran productos en el punto de venta.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Clientes">Clientes que compran productos en el punto de venta.</x-ui.titulo>
 
         <flux:modal.trigger name="cliente-form">
             <flux:button variant="primary" icon="plus" wire:click="nuevo">Nuevo cliente</flux:button>

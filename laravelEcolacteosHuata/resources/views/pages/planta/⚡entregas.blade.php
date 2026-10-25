@@ -125,10 +125,7 @@ new class extends Component
 
 <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Entregas de acopiadores</flux:heading>
-            <flux:subheading>Leche recibida de cada proveedor, agrupada automáticamente por acopiador.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Entregas de acopiadores">Leche recibida de cada proveedor, agrupada automáticamente por acopiador.</x-ui.titulo>
 
         <flux:input type="date" wire:model.live="fecha" class="max-w-xs" />
     </div>

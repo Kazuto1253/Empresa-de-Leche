@@ -41,10 +41,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-8">
-    <div>
-        <flux:heading size="xl">Precios</flux:heading>
-        <flux:subheading>Precio de la leche.</flux:subheading>
-    </div>
+    <x-ui.titulo titulo="Precios">Precio de la leche.</x-ui.titulo>
 
     <div class="max-w-md rounded-xl border border-huata-verde-100 p-5 dark:border-zinc-700 huata-cuadro">
         <flux:heading size="lg">Precio de la leche</flux:heading>

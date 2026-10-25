@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #12432c; }
-        .membrete { border-bottom: 2px solid #1a8049; padding-bottom: 10px; margin-bottom: 14px; }
-        .membrete h1 { font-size: 15px; margin: 0 0 4px; color: #12432c; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #061b3f; }
+        .membrete { border-bottom: 2px solid #0b4fa3; padding-bottom: 10px; margin-bottom: 14px; }
+        .membrete h1 { font-size: 15px; margin: 0 0 4px; color: #061b3f; }
         .membrete p { margin: 0; font-size: 9px; color: #444; }
-        h2.titulo { font-size: 13px; margin: 0 0 4px; color: #17663d; text-align: center; }
+        h2.titulo { font-size: 13px; margin: 0 0 4px; color: #083b7d; text-align: center; }
         p.numero { text-align: center; font-size: 11px; font-weight: bold; margin: 0 0 12px; }
         .proveedor { margin-bottom: 10px; font-size: 10px; }
         table.datos { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        table.datos th { background: #1a8049; color: #fff; text-align: left; padding: 5px 6px; font-size: 9px; }
-        table.datos td { padding: 4px 6px; border-bottom: 1px solid #d6f4de; font-size: 9px; }
+        table.datos th { background: #0b4fa3; color: #fff; text-align: left; padding: 5px 6px; font-size: 9px; }
+        table.datos td { padding: 4px 6px; border-bottom: 1px solid #dce8fb; font-size: 9px; }
         .estado { text-align: center; margin: 14px 0; font-size: 12px; font-weight: bold; }
         .estado.conforme { color: #1a8049; }
         .estado.no-conforme { color: #b42318; }

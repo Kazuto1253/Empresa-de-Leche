@@ -149,10 +149,7 @@ new class extends Component
 
 <div class="flex flex-col gap-10">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <flux:heading size="xl">Insumos</flux:heading>
-            <flux:subheading>Insumos y compras.</flux:subheading>
-        </div>
+        <x-ui.titulo titulo="Insumos">Insumos y compras.</x-ui.titulo>
         <div class="flex gap-2">
             <flux:button
                 size="sm"

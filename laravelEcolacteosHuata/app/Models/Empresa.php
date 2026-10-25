@@ -16,6 +16,21 @@ class Empresa extends Model
     protected $table = 'empresa';
 
     /**
+     * Teléfono de la empresa listo para wa.me (solo dígitos; un celular de 9 dígitos lleva el
+     * prefijo de Perú), o null si no hay teléfono.
+     */
+    public function whatsapp(): ?string
+    {
+        $digitos = preg_replace('/\D+/', '', (string) $this->telefono);
+
+        if ($digitos === '') {
+            return null;
+        }
+
+        return strlen($digitos) === 9 ? '51'.$digitos : $digitos;
+    }
+
+    /**
      * La configuración de la empresa es una fila única; la crea con valores por defecto
      * si todavía no existe.
      */
@@ -24,7 +39,7 @@ class Empresa extends Model
         return static::query()->firstOrCreate([], [
             'razon_social' => 'Ecolácteos Huata',
             'ruc' => '',
-            'telefono' => '',
+            'telefono' => '941431262',
             'direccion' => 'Huata, Puno, Perú',
         ]);
     }
