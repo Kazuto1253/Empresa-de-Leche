@@ -257,3 +257,17 @@ test('la portada ofrece pagar con Yape, Plin o efectivo en el carrito', function
         ->assertSee('Plin')
         ->assertSee('Confirmar pedido');
 });
+
+test('pagar con Yape exige el número de operación y la portada muestra el QR', function () {
+    $queso = produccionPublicada('Queso fresco', precio: 7.5);
+
+    $this->postJson(route('pedidos-web.store'), [
+        'items' => [['produccion_id' => $queso->id, 'cantidad' => 1]],
+        'nombre' => 'María Quispe',
+        'metodo_pago' => 'yape',
+    ])->assertUnprocessable()->assertJsonValidationErrors('codigo_operacion');
+
+    expect(PedidoWeb::count())->toBe(0);
+
+    $this->get(route('home'))->assertSee('images/yape-qr.jpg', false);
+});

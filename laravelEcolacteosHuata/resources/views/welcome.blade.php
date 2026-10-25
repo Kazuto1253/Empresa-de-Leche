@@ -4,7 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>document.documentElement.classList.add('js')</script>
+    <script>
+        document.documentElement.classList.add('js');
+        // Si la intro va a verse, se cubre la portada desde el primer pintado (evita el destello antes de que cargue el módulo)
+        try {
+            if (sessionStorage.getItem('huataIntroVista') !== '1' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('con-intro');
+            }
+        } catch (e) {}
+    </script>
 
     @php
         $titulo = 'Ecolácteos Huata | Lácteos frescos de Huata, Puno';
@@ -100,7 +108,7 @@
             <h2 id="intro-titulo" data-texto="ECOLÁCTEOS HUATA" class="font-display text-[clamp(1.7rem,6.5vw,4.2rem)] font-extrabold tracking-[0.1em]" style="transform-style: preserve-3d"></h2>
             <p id="intro-lema" class="mt-3 text-xs font-semibold tracking-[0.4em] text-white/75 opacity-0 sm:text-sm">DEL CAMPO A TU MESA</p>
         </div>
-        <p id="intro-leyenda" class="pointer-events-none absolute inset-x-0 top-[11%] z-10 px-4 text-center text-xs font-bold tracking-[0.35em] text-sky-100 opacity-0 sm:text-sm" aria-live="polite"></p>
+        <p id="intro-leyenda" class="pointer-events-none absolute inset-x-0 bottom-[4%] z-10 px-4 text-center text-xs font-bold tracking-[0.35em] text-sky-100 opacity-0 sm:text-sm" aria-live="polite"></p>
         <div class="absolute right-4 top-4 z-30 flex items-center gap-2 sm:right-6 sm:top-6">
             <button type="button" id="intro-pausa" class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-sm hover:bg-white/20" aria-pressed="false">
                 <svg class="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path class="ico-pausa" d="M7 5h4v14H7zM13 5h4v14h-4z"/><path class="ico-play hidden" d="M8 5l11 7-11 7z"/></svg><span class="txt">Pausar</span>
@@ -431,7 +439,7 @@
             <div id="carrito-lleno" class="hidden min-h-0 flex-1 flex-col">
                 <ul id="carrito-lineas" class="flex-1 divide-y divide-tinta/10 overflow-y-auto px-5"></ul>
 
-                <div class="border-t border-tinta/10 bg-white px-5 pb-5 pt-4">
+                <div class="min-h-0 shrink overflow-y-auto overscroll-contain border-t border-tinta/10 bg-white px-5 pb-5 pt-4">
                     <dl class="flex flex-col gap-1 text-sm">
                         <div class="flex justify-between"><dt class="text-tinta-suave">Productos</dt><dd id="carrito-unidades" class="tabular font-semibold"></dd></div>
                         <div class="flex items-end justify-between border-t border-tinta/10 pt-3"><dt class="font-semibold">Total</dt><dd id="carrito-total" class="tabular font-display text-3xl font-extrabold"></dd></div>
@@ -457,9 +465,20 @@
                                 </label>
                             @endforeach
                         </div>
+                        {{-- Yape: QR de la tienda. El pago lo hace el cliente en su app; la tienda lo verifica con el N.º de operación --}}
+                        <div id="pago-yape" class="mt-3 overflow-hidden rounded-2xl text-center text-white" style="background:#742284">
+                            <p class="px-4 pt-4 text-sm font-semibold">Escanea con Yape y paga</p>
+                            <p id="yape-monto" class="font-display text-3xl font-extrabold tabular"></p>
+                            <img src="{{ asset('images/yape-qr.jpg') }}" alt="Código QR de Yape para pagar a Ecolácteos Huata" width="1132" height="1360" loading="lazy" class="mx-auto mt-2 w-full max-w-[13rem] rounded-xl object-cover object-top" style="aspect-ratio:1132/1360">
+                            <ol class="mx-auto mt-3 max-w-xs list-decimal space-y-1 px-8 pb-4 text-left text-xs text-white/90">
+                                <li>Abre Yape y escanea el código (o toca "Yapear" y sube esta pantalla).</li>
+                                <li>Ingresa el monto exacto: <strong id="yape-monto-2" class="tabular"></strong>.</li>
+                                <li>Copia el N.º de operación de tu constancia y pégalo abajo.</li>
+                            </ol>
+                        </div>
                         <div id="pago-digital" class="mt-3 rounded-xl bg-cielo-50 p-3 text-sm">
-                            <p>Yapea o Plinea <strong id="pago-monto" class="tabular"></strong> al <strong class="tabular">{{ $whatsapp ? trim(chunk_split(substr($whatsapp, -9), 3, ' ')) : 'número de la tienda' }}</strong> a nombre de {{ $nombreEmpresa }}.</p>
-                            <label for="pedido-operacion" class="mt-2 block font-semibold">N.º de operación <span class="font-normal text-tinta-suave">(opcional)</span></label>
+                            <p id="pago-plin">Plinea <strong id="pago-monto" class="tabular"></strong> al <strong class="tabular">{{ $whatsapp ? trim(chunk_split(substr($whatsapp, -9), 3, ' ')) : 'número de la tienda' }}</strong> a nombre de {{ $nombreEmpresa }}.</p>
+                            <label for="pedido-operacion" class="mt-2 block font-semibold">N.º de operación <span id="operacion-nota" class="font-normal text-tinta-suave">(opcional)</span></label>
                             <input id="pedido-operacion" type="text" inputmode="text" maxlength="30" autocomplete="off" class="mt-1 min-h-11 w-full rounded-xl border border-tinta/20 bg-white px-3 text-base placeholder:text-tinta-suave/70" placeholder="Lo ves en tu comprobante de pago">
                         </div>
                         <p id="pago-efectivo" class="mt-3 hidden rounded-xl bg-cielo-50 p-3 text-sm">Pagas en efectivo cuando recibas o recojas tu pedido.</p>
@@ -467,7 +486,7 @@
 
                     <p id="pedido-error" class="mt-3 hidden rounded-xl bg-rojo-600/10 px-4 py-3 text-sm font-semibold text-rojo-700" role="alert"></p>
 
-                    <button type="button" id="pedido-wa" class="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-cobalto-600 px-7 text-base font-bold text-white transition-colors hover:bg-cobalto-700 disabled:opacity-60">Confirmar pedido</button>
+                    <button type="button" id="pedido-wa" class="sticky bottom-2 z-10 mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-cobalto-600 px-7 text-base font-bold text-white shadow-[0_8px_24px_rgb(23_61_114/0.35)] transition-colors hover:bg-cobalto-700 disabled:opacity-60">Confirmar pedido</button>
                     <p class="mt-2 text-center text-xs text-tinta-suave">Guardamos tu compra, te mostramos tu comprobante y avisamos a la tienda por WhatsApp. No necesitas iniciar sesión.</p>
                     <button type="button" id="carrito-vaciar" class="mt-3 w-full py-2 text-sm font-semibold text-tinta-suave underline underline-offset-4 hover:text-tinta">Vaciar carrito</button>
                 </div>
@@ -800,10 +819,15 @@
             var etiquetasMetodo = { yape: 'Yape', plin: 'Plin', efectivo: 'efectivo' };
             function metodo() { var r = document.querySelector('input[name="pedido-metodo"]:checked'); return r ? r.value : 'yape'; }
             function actualizarPago() {
-                var digital = metodo() !== 'efectivo';
+                var forma = metodo(), digital = forma !== 'efectivo', esYape = forma === 'yape';
                 $('pago-digital').classList.toggle('hidden', !digital);
+                $('pago-yape').classList.toggle('hidden', !esYape);
+                $('pago-plin').classList.toggle('hidden', esYape);
                 $('pago-efectivo').classList.toggle('hidden', digital);
+                $('operacion-nota').textContent = esYape ? '(obligatorio)' : '(opcional)';
                 $('pago-monto').textContent = soles(total());
+                $('yape-monto').textContent = soles(total());
+                $('yape-monto-2').textContent = soles(total());
             }
             document.querySelectorAll('input[name="pedido-metodo"]').forEach(function (r) { r.addEventListener('change', actualizarPago); });
 
@@ -818,6 +842,7 @@
                 error('');
                 if (!ids().length) { error('Tu carrito está vacío.'); return; }
                 if (nombre.value.trim().length < 2) { error('Escribe tu nombre para que sepamos quién pide.'); nombre.focus(); return; }
+                if (metodo() === 'yape' && operacion.value.trim().length < 3) { error('Paga con el QR de Yape y escribe el N.º de operación de tu constancia.'); operacion.focus(); return; }
                 var lineas = ids().map(function (id) { return { p: porId[id], n: carrito[id] }; });
                 var totalPedido = total(), forma = metodo(), op = operacion.value.trim();
                 var ventana = wa ? window.open('', '_blank') : null;

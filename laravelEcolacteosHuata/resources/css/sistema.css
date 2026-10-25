@@ -77,10 +77,19 @@
     min-height: 100vh;
     color: var(--hh-texto);
     background-color: var(--hh-fondo);
+    /* Foto de la vaca con velo azul translúcido de la paleta corporativa */
     background-image:
-        radial-gradient(ellipse 55% 38% at 92% -4%, rgb(40 100 180 / 0.1), transparent 70%),
-        radial-gradient(ellipse 45% 32% at -4% 104%, rgb(35 134 91 / 0.06), transparent 70%);
+        linear-gradient(165deg, rgb(234 243 251 / 0.9) 0%, rgb(40 100 180 / 0.62) 55%, rgb(23 61 114 / 0.78) 100%),
+        url('/images/fondo-huata.jpg');
+    background-size: cover;
+    background-position: center;
     background-attachment: fixed;
+}
+
+.dark .hh-cuerpo {
+    background-image:
+        linear-gradient(165deg, rgb(15 27 46 / 0.9) 0%, rgb(23 61 114 / 0.78) 55%, rgb(15 27 46 / 0.92) 100%),
+        url('/images/fondo-huata.jpg');
 }
 
 /* Las tarjetas antiguas (`huata-cuadro`) usan la misma superficie blanca */

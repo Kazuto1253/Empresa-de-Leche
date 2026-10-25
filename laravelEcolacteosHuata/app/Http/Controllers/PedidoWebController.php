@@ -26,8 +26,9 @@ class PedidoWebController extends Controller
             'nombre' => ['required', 'string', 'min:2', 'max:80'],
             'celular' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\s-]{6,20}$/'],
             'metodo_pago' => ['required', Rule::in([MetodoPago::Yape->value, MetodoPago::Plin->value, MetodoPago::Efectivo->value])],
-            'codigo_operacion' => ['nullable', 'string', 'max:30', 'regex:/^[A-Za-z0-9\s-]{3,30}$/'],
+            'codigo_operacion' => ['nullable', 'required_if:metodo_pago,'.MetodoPago::Yape->value, 'string', 'max:30', 'regex:/^[A-Za-z0-9\s-]{3,30}$/'],
         ], [
+            'codigo_operacion.required_if' => 'Después de pagar con Yape, escribe el N.º de operación de tu comprobante.',
             'metodo_pago.required' => 'Elige cómo vas a pagar.',
             'metodo_pago.in' => 'Elige cómo vas a pagar: Yape, Plin o efectivo.',
             'codigo_operacion.regex' => 'El número de operación solo puede llevar letras y números.',

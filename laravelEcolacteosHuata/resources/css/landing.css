@@ -291,6 +291,11 @@
     }
 }
 
+/* La intro cubre la portada desde el primer pintado; el JS toma el control al cargar */
+html.con-intro #intro.hidden {
+    display: block;
+}
+
 @media (prefers-reduced-motion: reduce) {
     #intro {
         display: none !important;
